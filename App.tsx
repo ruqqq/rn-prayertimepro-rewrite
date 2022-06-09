@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   Colors,
@@ -99,7 +100,13 @@ const App: () => React.ReactElement = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen
+          name="RN Dev"
+          component={Home}
+          options={{
+            tabBarIcon: () => <MaterialCommunityIcons name="home" size={24} />,
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
