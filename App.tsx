@@ -16,7 +16,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
 import {
   Colors,
@@ -29,7 +29,7 @@ import {
 const Section = ({
   children,
   title,
-}: React.PropsWithChildren & {title: string}): React.ReactElement => {
+}: React.PropsWithChildren & { title: string }): React.ReactElement => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
