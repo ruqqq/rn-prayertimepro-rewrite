@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "postinstall": "husky install",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
@@ -11,6 +12,9 @@
     "detox:test:local": "detox test -c android.attached.debug",
     "detox:emulator": "detox test -c android.emulator.debug",
     "detox:build": "detox build"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --fix"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.3.1",
@@ -24,8 +28,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@babel/preset-typescript": "^7.17.12",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@testing-library/react-native": "^9.1.0",
     "@types/jest": "^27.0.0",
     "@types/react": "^18.0.12",
     "@types/react-native": "^0.67.8",
@@ -34,12 +40,12 @@
     "babel-jest": "^27.0.0",
     "detox": "^19.7.1",
     "eslint": "^7.32.0",
+    "husky": "^8.0.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.0",
+    "lint-staged": "^13.0.1",
     "metro-react-native-babel-preset": "^0.67.0",
     "react-test-renderer": "17.0.2",
     "typescript": "^4.7.3"
-  },
-  "jest": {
-    "preset": "react-native"
   }
 }
