@@ -31,6 +31,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Button from 'react-native-ui-lib/button';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Section = ({
   children,
@@ -123,10 +125,13 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
           backgroundColor: '#fff',
           image: <></>,
           title: 'Onboarding 2',
-          subtitle: 'Onboarding text 2',
+          subtitle: (
+            <Button label="Done" onPress={() => navigation.replace('App')} />
+          ),
         },
       ]}
-      onDone={() => navigation.replace('App')}
+      showSkip={false}
+      showDone={false}
     />
   );
 };
@@ -150,12 +155,14 @@ const App: () => React.ReactElement = () => {
 
 const AppContainer: () => React.ReactElement = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="App" component={App} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen name="App" component={App} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 };
 
