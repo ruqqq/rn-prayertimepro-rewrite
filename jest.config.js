@@ -7,6 +7,6 @@ module.exports = {
     '\\.(jpg|jpeg|png)$': 'identity-obj-proxy',
   },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(@react-native|react-native|react-native-vector-icons)/).*/',
+    '<rootDir>/node_modules/(?!(@react-native|react-native|react-native-vector-icons|react-native-onboarding-swiper)/).*/',
   ],
 };

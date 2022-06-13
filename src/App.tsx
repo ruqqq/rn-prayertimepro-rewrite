@@ -17,7 +17,12 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Onboarding from 'react-native-onboarding-swiper';
 
 import {
   Colors,
@@ -94,20 +99,62 @@ const Home = () => {
   );
 };
 
+type RootStackParamList = {
+  Onboarding: undefined;
+  App: undefined;
+};
+
+type OnboardingScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Onboarding'
+>;
+const OnboardingScreen = (props: OnboardingScreenProps) => {
+  const { navigation } = props;
+  return (
+    <Onboarding
+      pages={[
+        {
+          backgroundColor: '#fff',
+          image: <></>,
+          title: 'Onboarding',
+          subtitle: 'Onboarding text',
+        },
+        {
+          backgroundColor: '#fff',
+          image: <></>,
+          title: 'Onboarding 2',
+          subtitle: 'Onboarding text 2',
+        },
+      ]}
+      onDone={() => navigation.replace('App')}
+    />
+  );
+};
+
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App: () => React.ReactElement = () => {
   return (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="RN Dev"
+        component={Home}
+        options={{
+          tabBarIcon: () => <MaterialCommunityIcons name="home" size={24} />,
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const AppContainer: () => React.ReactElement = () => {
+  return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="RN Dev"
-          component={Home}
-          options={{
-            tabBarIcon: () => <MaterialCommunityIcons name="home" size={24} />,
-          }}
-        />
-      </Tab.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="App" component={App} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
@@ -131,4 +178,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default AppContainer;
