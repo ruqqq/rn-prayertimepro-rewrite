@@ -7,5 +7,19 @@ export function openDatabase(
   size: number,
   callback: (db: any) => void,
 ) {
-  return wOpenDatabase(':memory:', version, description, size, callback);
+  const db = wOpenDatabase(':memory:', version, description, size, callback);
+  db.deleteAsync = () => {
+    db.transaction((tx: any) => {
+      tx.executeSql(
+        'SELECT name FROM sqlite_schema WHERE type = "table" AND name NOT LIKE "sqlite_%"',
+        [],
+        (_: any, resultSet: any) => {
+          resultSet.rows._array.forEach(({ name }: { name: string }) =>
+            tx.executeSql(`DROP TABLE ${name}`),
+          );
+        },
+      );
+    });
+  };
+  return db;
 }

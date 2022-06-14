@@ -1,22 +1,11 @@
-import {
-  executeMultiSql,
-  executeSql,
-  insert,
-  insertMany,
-  openDatabase,
-  query,
-  update,
-} from './Db';
+import Db from './Db';
 
-describe('db', () => {
+describe('Db', () => {
   it('should be able to create table and insert data', async () => {
-    const db = openDatabase('test');
-    await executeSql(
-      db,
+    await Db.executeSql(
       'CREATE TABLE IF NOT EXISTS TestTable (id INTEGER NOT NULL, name TEXT NOT NULL);',
     );
-    const insertId = await insert(
-      db,
+    const insertId = await Db.insert(
       'INSERT INTO TestTable (id, name) VALUES (?, ?)',
       [1, 'hello'],
     );
@@ -25,12 +14,10 @@ describe('db', () => {
   });
 
   it('should be able to create table and insert many data', async () => {
-    const db = openDatabase('test');
-    await executeSql(
-      db,
+    await Db.executeSql(
       'CREATE TABLE IF NOT EXISTS TestTable (id INTEGER NOT NULL, name TEXT NOT NULL);',
     );
-    const insertIds = await insertMany(db, [
+    const insertIds = await Db.insertMany([
       'INSERT INTO TestTable (id, name) VALUES (1, "hello")',
       'INSERT INTO TestTable (id, name) VALUES (2, "hello")',
       'INSERT INTO TestTable (id, name) VALUES (3, "hello")',
@@ -40,13 +27,11 @@ describe('db', () => {
   });
 
   it('should be able to retrieve inserted data', async () => {
-    const db = openDatabase('test');
-    await executeSql(
-      db,
+    await Db.executeSql(
       'CREATE TABLE IF NOT EXISTS TestTable (id INTEGER NOT NULL, name TEXT NOT NULL);',
     );
-    await insert(db, 'INSERT INTO TestTable (id, name) VALUES (1, "hello");');
-    const result = await query(db, 'SELECT * FROM TestTable');
+    await Db.insert('INSERT INTO TestTable (id, name) VALUES (1, "hello");');
+    const result = await Db.query('SELECT * FROM TestTable');
 
     expect(result).toEqual([
       {
@@ -57,14 +42,11 @@ describe('db', () => {
   });
 
   it('should be able to update data', async () => {
-    const db = openDatabase('test');
-    await executeSql(
-      db,
+    await Db.executeSql(
       'CREATE TABLE IF NOT EXISTS TestTable (id INTEGER NOT NULL, name TEXT NOT NULL);',
     );
-    await insert(db, 'INSERT INTO TestTable (id, name) VALUES (1, "hello");');
-    const affectedRows = await update(
-      db,
+    await Db.insert('INSERT INTO TestTable (id, name) VALUES (1, "hello");');
+    const affectedRows = await Db.update(
       'UPDATE TestTable SET name = "updated name" WHERE id = 1',
     );
 
@@ -72,9 +54,7 @@ describe('db', () => {
   });
 
   it('should be able to insert and then retrieve data in a single transaction', async () => {
-    const db = openDatabase('test');
-    const result = await executeMultiSql(
-      db,
+    const result = await Db.executeMultiSql(
       [
         'CREATE TABLE IF NOT EXISTS TestTable (id INTEGER NOT NULL, name TEXT NOT NULL)',
         'INSERT INTO TestTable (id, name) VALUES (1, "hello")',
@@ -86,7 +66,7 @@ describe('db', () => {
     expect(result.length).toEqual(3);
     expect(result[1].insertId).toEqual(1);
     expect(result[2].rowsAffected).toEqual(1);
-    const queryResult = await query(db, 'SELECT * FROM TestTable');
+    const queryResult = await Db.query('SELECT * FROM TestTable');
     expect(queryResult).toEqual([
       {
         id: 1,

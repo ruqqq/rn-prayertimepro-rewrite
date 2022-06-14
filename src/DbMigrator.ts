@@ -1,10 +1,12 @@
-import { WebSQLDatabase } from 'expo-sqlite';
-import { executeMultiSql, executeSql, insert, query } from './Db';
+import Db from './Db';
+import PreferencesRepository from './repositories/PreferencesRepository';
+import SystemPreferencesRepository from './repositories/SystemPreferencesRepository';
 import {
   generateCreateTableStatement,
   MigrationId,
   MigrationStatements,
 } from './repositories/utils';
+import ZonesRepository from './repositories/ZonesRepository';
 
 const MigrationMetaTableName = 'migration_meta';
 
@@ -19,8 +21,11 @@ const MigrationMetaColumnTypes = {
 const MigrationMetaPrimaryKey = [MigrationMetaColumns.name];
 
 async function migrate(
-  db: WebSQLDatabase,
-  allMigrations: [MigrationId, MigrationStatements][],
+  allMigrations: [MigrationId, MigrationStatements][] = [
+    ...ZonesRepository.migrations(),
+    ...PreferencesRepository.migrations(),
+    ...SystemPreferencesRepository.migrations(),
+  ],
 ): Promise<void> {
   const statement = generateCreateTableStatement(
     MigrationMetaTableName,
@@ -28,22 +33,20 @@ async function migrate(
     MigrationMetaColumnTypes,
     MigrationMetaPrimaryKey,
   );
-  await executeSql(db, statement);
+  await Db.executeSql(statement);
 
   for (let i = 0; i < allMigrations.length; i++) {
     const migrationId = allMigrations[i][0];
     const migrations = allMigrations[i][1];
 
-    const existingMigrations = await query(
-      db,
+    const existingMigrations = await Db.query(
       `SELECT * FROM ${MigrationMetaTableName} WHERE ${MigrationMetaColumns.name} = ?`,
       [migrationId],
     );
     if (existingMigrations.length === 0) {
       try {
-        await executeMultiSql(db, migrations);
-        await insert(
-          db,
+        await Db.executeMultiSql(migrations);
+        await Db.insert(
           `INSERT INTO ${MigrationMetaTableName} (${Object.values(
             MigrationMetaColumns,
           ).join(', ')}) VALUES (?)`,

@@ -2,10 +2,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import Text from 'react-native-ui-lib/text';
-import { openDatabase } from '../Db';
 import DbMigrator from '../DbMigrator';
 import { RootStackParamList } from '../navigation-types';
-import ZonesRepository from '../repositories/ZonesRepository';
+import SystemPreferencesRepository from '../repositories/SystemPreferencesRepository';
 
 export type SplashScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -16,7 +15,7 @@ const SplashScreen = (props: SplashScreenProps) => {
   const { navigation } = props;
 
   useEffect(() => {
-    init().then(() => navigation.replace('Onboarding'));
+    init().then(nextScreen => navigation.replace(nextScreen));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -33,9 +32,12 @@ const SplashScreen = (props: SplashScreenProps) => {
   );
 };
 
-async function init(): Promise<void> {
-  const db = openDatabase('database.db');
-  await DbMigrator.migrate(db, [...ZonesRepository.migrations()]);
+async function init(): Promise<'Onboarding' | 'Main'> {
+  await DbMigrator.migrate();
+  const onboardingCompleted = await SystemPreferencesRepository.get(
+    'onboarding_completed',
+  );
+  return onboardingCompleted ? 'Main' : 'Onboarding';
 }
 
 export default SplashScreen;

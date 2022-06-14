@@ -1,64 +1,50 @@
-import {
-  openDatabase as webSqlOpenDatabase,
-  SQLResultSet,
-  SQLResultSetRowList,
-  WebSQLDatabase,
-} from 'expo-sqlite';
+import { openDatabase, SQLResultSet, WebSQLDatabase } from 'expo-sqlite';
 
 export type Database = WebSQLDatabase;
 
-export const openDatabase: typeof webSqlOpenDatabase = (
-  name,
-  version,
-  description,
-  size,
-  callback,
-) => {
-  return webSqlOpenDatabase(name, version, description, size, callback);
-};
+let db: Database;
 
-export async function query(
-  db: WebSQLDatabase,
+function open() {
+  db = openDatabase('database.db');
+}
+
+async function query(
   statement: string,
   args?: (string | number)[],
-): Promise<SQLResultSetRowList> {
-  const result = await executeSql(db, statement, args);
+): Promise<any[]> {
+  const result = await executeSql(statement, args);
   if ('_array' in result.rows) {
     return result.rows._array as any;
   }
 
-  return result.rows;
+  return result.rows as any;
 }
 
-export async function insert(
-  db: WebSQLDatabase,
+async function insert(
   statement: string,
   args?: (string | number)[],
 ): Promise<number | undefined> {
-  const result = await executeSql(db, statement, args);
+  const result = await executeSql(statement, args);
   return result.insertId;
 }
 
-export async function insertMany(
-  db: WebSQLDatabase,
+async function insertMany(
   statements: string[],
   args?: (string | number)[][],
 ): Promise<(number | undefined)[]> {
-  const result = await executeMultiSql(db, statements, args);
+  const result = await executeMultiSql(statements, args);
   return result.map(r => r.insertId);
 }
 
-export async function update(
-  db: WebSQLDatabase,
+async function update(
   statement: string,
   args?: (string | number)[],
 ): Promise<number> {
-  const result = await executeSql(db, statement, args);
+  const result = await executeSql(statement, args);
   return result.rowsAffected;
 }
 
-export async function executeSql(
-  db: WebSQLDatabase,
+async function executeSql(
   statement: string,
   args?: (string | number)[],
 ): Promise<SQLResultSet> {
@@ -69,8 +55,7 @@ export async function executeSql(
   });
 }
 
-export async function executeMultiSql(
-  db: WebSQLDatabase,
+async function executeMultiSql(
   statements: string[],
   args?: (string | number)[][],
 ): Promise<SQLResultSet[]> {
@@ -91,3 +76,14 @@ export async function executeMultiSql(
     );
   });
 }
+
+export default {
+  open,
+  query,
+  insert,
+  insertMany,
+  update,
+  executeSql,
+  executeMultiSql,
+  _db: () => db,
+};

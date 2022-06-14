@@ -1,18 +1,12 @@
-import { Database, openDatabase, query } from './Db';
+import Db from './Db';
 import DbMigrator from './DbMigrator';
 import ZonesRepository from './repositories/ZonesRepository';
 
 describe('DbMigrator', () => {
-  let db: Database;
-  beforeEach(() => {
-    db = openDatabase('test');
-  });
-
   it('should create MigrationMeta table', async () => {
-    await DbMigrator.migrate(db, []);
+    await DbMigrator.migrate([]);
 
-    const result = await query(
-      db,
+    const result = await Db.query(
       'SELECT name, sql FROM sqlite_schema WHERE type = "table" AND name NOT LIKE "sqlite_%"',
     );
     expect(result).toEqual([
@@ -24,11 +18,10 @@ describe('DbMigrator', () => {
   });
 
   it('should create MigrationMeta table only once', async () => {
-    await DbMigrator.migrate(db, []);
-    await DbMigrator.migrate(db, []);
+    await DbMigrator.migrate([]);
+    await DbMigrator.migrate([]);
 
-    const result = await query(
-      db,
+    const result = await Db.query(
       'SELECT name FROM sqlite_schema WHERE type = "table" AND name NOT LIKE "sqlite_%"',
     );
     expect(result).toEqual([{ name: 'migration_meta' }]);
@@ -36,10 +29,9 @@ describe('DbMigrator', () => {
 
   describe('Zones', () => {
     it('should migrate Zones', async () => {
-      await DbMigrator.migrate(db, [...ZonesRepository.migrations()]);
+      await DbMigrator.migrate([...ZonesRepository.migrations()]);
 
-      const result = await query(
-        db,
+      const result = await Db.query(
         'SELECT name, sql FROM sqlite_schema WHERE type = "table" AND name NOT LIKE "sqlite_%"',
       );
       expect(result).toEqual([
@@ -52,10 +44,10 @@ describe('DbMigrator', () => {
     });
 
     it('should migrate Zones only once', async () => {
-      await DbMigrator.migrate(db, [...ZonesRepository.migrations()]);
-      await DbMigrator.migrate(db, [...ZonesRepository.migrations()]);
+      await DbMigrator.migrate([...ZonesRepository.migrations()]);
+      await DbMigrator.migrate([...ZonesRepository.migrations()]);
 
-      const result = await query(db, 'SELECT * FROM migration_meta');
+      const result = await Db.query('SELECT * FROM migration_meta');
       expect(result).toHaveLength(1);
       expect(result).toEqual([
         {
