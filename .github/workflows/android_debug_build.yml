@@ -59,6 +59,11 @@ jobs:
         run: |
           cd android && ./gradlew assembleDebug --no-daemon
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: APK
+          path: android/**/*.apk
+
       ## sign generated apk
       # - name: Sign APK
       #   id: sign_app
