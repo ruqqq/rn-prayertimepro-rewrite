@@ -1,4 +1,4 @@
-import Db from '../Db';
+import GenericPreferencesRepository from './GenericPreferencesRepository';
 import {
   generateCreateTableStatement,
   MigrationId,
@@ -22,20 +22,11 @@ const SystemPreferencesPrimaryKey = [
   SystemPreferencesColumns.value,
 ];
 
-export const SystemPreferencesIds = {
-  prayertimes_data_sha: 'prayertimes_data_sha',
-  general_data_loaded: 'general_data_loaded',
-  city_data_loaded: 'city_data_loaded',
-  musolla_data_sha: 'musolla_data_sha',
-  js_version: 'js_version',
-  onboarding_completed: 'onboarding_completed',
-};
-
 type SystemPreferencesTypes = {
-  prayertimes_data_sha: string | null;
+  prayertimes_data_sha: string;
   general_data_loaded: boolean;
   city_data_loaded: boolean;
-  musolla_data_sha: string | null;
+  musolla_data_sha: string;
   js_version: string;
   onboarding_completed: boolean;
 };
@@ -49,48 +40,7 @@ const SystemPreferencesDefaultValues: SystemPreferencesTypes = {
   onboarding_completed: false,
 };
 
-export type SystemPreferencesId = keyof typeof SystemPreferencesIds;
-
-async function get<K extends SystemPreferencesId>(
-  id: K,
-): Promise<SystemPreferencesTypes[K]> {
-  const defaultValue = SystemPreferencesDefaultValues[id];
-  const results = await Db.query(
-    `SELECT * FROM ${SystemPreferencesTableName} WHERE id = ?`,
-    [id],
-  );
-  if (results.length === 0) {
-    return defaultValue;
-  }
-
-  const { value } = results[0];
-  if (typeof defaultValue === 'boolean') {
-    return (value === 'true') as any;
-  } else if (typeof defaultValue === 'number') {
-    return parseFloat(value) as any;
-  }
-
-  return `${value}` as any;
-}
-
-async function set<K extends SystemPreferencesId>(
-  id: K,
-  value: SystemPreferencesTypes[K],
-): Promise<void> {
-  await Db.insert(
-    `INSERT INTO ${SystemPreferencesTableName} (${Object.values(
-      SystemPreferencesColumns,
-    ).join(', ')}) VALUES (?, ?)`,
-    [id, `${value}`],
-  );
-}
-
-async function del<K extends SystemPreferencesId>(id: K): Promise<void> {
-  await Db.executeSql(
-    `DELETE FROM ${SystemPreferencesTableName} WHERE id = ?`,
-    [id],
-  );
-}
+export type SystemPreferencesId = keyof SystemPreferencesTypes;
 
 function migrations(): [MigrationId, MigrationStatements][] {
   return [
@@ -108,9 +58,9 @@ function migrations(): [MigrationId, MigrationStatements][] {
   ];
 }
 
-export default {
+export default new GenericPreferencesRepository(
+  SystemPreferencesTableName,
+  Object.values(SystemPreferencesColumns),
+  SystemPreferencesDefaultValues,
   migrations,
-  get,
-  set,
-  del,
-};
+);

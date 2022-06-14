@@ -1,3 +1,4 @@
+import GenericPreferencesRepository from './GenericPreferencesRepository';
 import {
   generateCreateTableStatement,
   MigrationId,
@@ -17,6 +18,36 @@ const PreferencesColumnTypes = {
 };
 
 const PreferencesPrimaryKey = [PreferencesColumns.id, PreferencesColumns.value];
+
+type PreferencesTypes = {
+  locality_city: string;
+  locality_code: string;
+  notification_sound: string;
+  notification_sounds: string;
+  prenotification_sounds: string;
+  prenotification_minutes: number;
+  postnotification_sounds: string;
+  postnotification_minutes: number;
+  first_install_date: string;
+  notification_use_set_alarm: boolean; // Android only
+  notification_subuh_alarm: boolean; // Android only
+  notification_show_next_prayer: boolean;
+};
+
+const PreferencesDefaultValues: PreferencesTypes = {
+  locality_city: '',
+  locality_code: '',
+  notification_sound: '',
+  notification_sounds: '',
+  prenotification_sounds: '',
+  prenotification_minutes: 10,
+  postnotification_sounds: '',
+  postnotification_minutes: 10,
+  first_install_date: '',
+  notification_use_set_alarm: false, // Android only
+  notification_subuh_alarm: false, // Android only
+  notification_show_next_prayer: false,
+};
 
 export const PreferencesIds = {
   locality_city: 'locality_city',
@@ -51,6 +82,9 @@ function migrations(): [MigrationId, MigrationStatements][] {
   ];
 }
 
-export default {
+export default new GenericPreferencesRepository(
+  PreferencesTableName,
+  Object.values(PreferencesColumns),
+  PreferencesDefaultValues,
   migrations,
-};
+);
