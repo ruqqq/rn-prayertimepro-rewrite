@@ -5,6 +5,8 @@ import {
   WebSQLDatabase,
 } from 'expo-sqlite';
 
+export type Database = WebSQLDatabase;
+
 export const openDatabase: typeof webSqlOpenDatabase = (
   name,
   version,
