@@ -10,12 +10,10 @@ const MigrationMetaTableName = 'migration_meta';
 
 const MigrationMetaColumns = {
   name: 'name',
-  status: 'status',
 };
 
 const MigrationMetaColumnTypes = {
   name: 'TEXT NOT NULL',
-  status: 'TEXT NOT NULL',
 };
 
 const MigrationMetaPrimaryKey = [MigrationMetaColumns.name];
@@ -48,18 +46,11 @@ async function migrate(
           db,
           `INSERT INTO ${MigrationMetaTableName} (${Object.values(
             MigrationMetaColumns,
-          ).join(', ')}) VALUES (?, ?)`,
-          [migrationId, 'SUCCESS'],
+          ).join(', ')}) VALUES (?)`,
+          [migrationId],
         );
       } catch (e) {
         console.error(e);
-        await insert(
-          db,
-          `INSERT INTO ${MigrationMetaTableName} (${Object.values(
-            MigrationMetaColumns,
-          ).join(', ')}) VALUES (?, ?)`,
-          [migrationId, 'FAILED'],
-        );
       }
     }
   }

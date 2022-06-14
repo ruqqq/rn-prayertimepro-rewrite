@@ -18,7 +18,7 @@ describe('DbMigrator', () => {
     expect(result).toEqual([
       {
         name: 'migration_meta',
-        sql: 'CREATE TABLE migration_meta (name TEXT NOT NULL, status TEXT NOT NULL, PRIMARY KEY (name))',
+        sql: 'CREATE TABLE migration_meta (name TEXT NOT NULL, PRIMARY KEY (name))',
       },
     ]);
   });
@@ -45,7 +45,7 @@ describe('DbMigrator', () => {
       expect(result).toEqual([
         {
           name: 'migration_meta',
-          sql: 'CREATE TABLE migration_meta (name TEXT NOT NULL, status TEXT NOT NULL, PRIMARY KEY (name))',
+          sql: 'CREATE TABLE migration_meta (name TEXT NOT NULL, PRIMARY KEY (name))',
         },
         { name: 'zones', sql: expect.anything() },
       ]);
@@ -60,7 +60,6 @@ describe('DbMigrator', () => {
       expect(result).toEqual([
         {
           name: expect.stringContaining('zones_'),
-          status: 'SUCCESS',
         },
       ]);
     });
