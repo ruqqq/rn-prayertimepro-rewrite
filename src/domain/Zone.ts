@@ -2,40 +2,68 @@ import { valueOf, ValueType } from './utils';
 
 type ZoneCode = ValueType<'ZoneCode', string>;
 export function zoneCodeOf(code: string): ZoneCode {
-  return ['ZoneCode', code];
+  return {
+    type: 'ZoneCode',
+    value: () => code,
+  };
 }
 
 type State = ValueType<'State', string>;
 export function stateOf(state: string): State {
-  return ['State', state];
+  return {
+    type: 'State',
+    value: () => state,
+  };
 }
 
 type City = ValueType<'City', string>;
 export function cityOf(city: string): City {
-  return ['City', city];
+  return {
+    type: 'City',
+    value: () => city,
+  };
 }
 
 type Country = ValueType<'Country', string>;
 export function countryOf(country: string): Country {
-  return ['Country', country];
+  return {
+    type: 'Country',
+    value: () => country,
+  };
 }
 
 export function countryFromState(state: string): Country {
   if (state === 'Singapore') {
-    return ['Country', 'SG'];
+    return {
+      type: 'Country',
+      value: () => 'SG',
+    };
   }
 
-  return ['Country', 'MY'];
+  return {
+    type: 'Country',
+    value: () => 'MY',
+  };
 }
 
 type LatLng = ValueType<'LatLng', number>;
 export function latLngOf(latLng: number): LatLng {
-  return ['LatLng', latLng];
+  return {
+    type: 'LatLng',
+    value: () => latLng,
+  };
 }
 
-type Timezone = ValueType<'Timezone', string>;
+type Timezone = ValueType<'Timezone', 'Asia/Singapore' | 'Asia/Kuala_Lumpur'>;
 export function timezoneOf(timezone: string): Timezone {
-  return ['Timezone', timezone];
+  if (timezone === 'Asia/Singapore' || timezone === 'Asia/Kuala_Lumpur') {
+    return {
+      type: 'Timezone',
+      value: () => timezone,
+    };
+  }
+
+  throw new Error(`Cannot convert ${timezone} to Timezone.`);
 }
 
 type Zone = {

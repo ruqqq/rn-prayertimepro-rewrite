@@ -1,6 +1,7 @@
 import Db from './Db';
 import PreferencesRepository from './repositories/PreferencesRepository';
 import SystemPreferencesRepository from './repositories/SystemPreferencesRepository';
+import TimesRepository from './repositories/TimesRepository';
 import {
   generateCreateTableStatement,
   MigrationId,
@@ -22,9 +23,10 @@ const MigrationMetaPrimaryKey = [MigrationMetaColumns.name];
 
 async function migrate(
   allMigrations: [MigrationId, MigrationStatements][] = [
-    ...ZonesRepository.migrations(),
     ...PreferencesRepository.migrations(),
     ...SystemPreferencesRepository.migrations(),
+    ...ZonesRepository.migrations(),
+    ...TimesRepository.migrations(),
   ],
 ): Promise<void> {
   const statement = generateCreateTableStatement(

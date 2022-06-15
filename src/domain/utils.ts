@@ -1,11 +1,15 @@
 export type ValueType<
   N extends string,
   T extends string | number | undefined,
-> = readonly [N, T];
+> = {
+  type: N;
+  value(): T;
+  toString(): string;
+};
 
 export function valueOf<
   N extends string,
   T extends string | number | undefined,
 >(value: ValueType<N, T>): T {
-  return value[1];
+  return value.value();
 }
