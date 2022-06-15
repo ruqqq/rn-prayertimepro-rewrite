@@ -31,9 +31,9 @@ async function insert(
 async function insertMany(
   statements: string[],
   args?: (string | number)[][],
-): Promise<(number | undefined)[]> {
+): Promise<number[]> {
   const result = await executeMultiSql(statements, args);
-  return result.map(r => r.insertId);
+  return result.map(r => r.insertId!);
 }
 
 async function update(

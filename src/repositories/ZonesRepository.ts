@@ -1,3 +1,5 @@
+import Db from '../Db';
+import * as Zone from '../domain/Zone';
 import {
   generateCreateTableStatement,
   MigrationId,
@@ -48,6 +50,34 @@ function migrations(): [MigrationId, MigrationStatements][] {
   ];
 }
 
+async function getZones(): Promise<Zone.T[]> {
+  const results = await Db.query(`SELECT * FROM ${ZonesTableName}`);
+  return results.map(Zone.fromDb);
+}
+
+async function replaceZones(zones: Zone.T[]): Promise<number[]> {
+  const rows: [string, (string | number)[]][] = zones.map(Zone.toDb).map(z => {
+    const columns = Object.keys(z).join(', ');
+    const args = Object.keys(z)
+      .map(() => '?')
+      .join(', ');
+    const values = Object.values(z).map(v => (v === undefined ? '' : v));
+    return [
+      `INSERT INTO ${ZonesTableName} (${columns}) VALUES (${args})`,
+      values,
+    ];
+  });
+
+  const results = await Db.executeMultiSql(
+    [`DELETE FROM ${ZonesTableName}`, ...rows.map(row => row[0])],
+    [[], ...rows.map(row => row[1])],
+  );
+  return results.map(r => r.insertId!);
+}
+
 export default {
+  ZonesTableName,
   migrations,
+  getZones,
+  replaceZones,
 };
