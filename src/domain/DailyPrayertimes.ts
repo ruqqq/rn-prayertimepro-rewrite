@@ -83,7 +83,7 @@ export function dateTimeOf(dateStr: string): DateTime {
   };
 }
 
-type SourceId = ValueType<'SourceId', number>;
+export type SourceId = ValueType<'SourceId', number>;
 export function sourceIdOf(sourceId: number): SourceId {
   return {
     type: 'SourceId',
@@ -91,7 +91,7 @@ export function sourceIdOf(sourceId: number): SourceId {
   };
 }
 
-type LocalityCode = ValueType<'LocalityCode', string>;
+export type LocalityCode = ValueType<'LocalityCode', string>;
 export function localityCodeOf(localityCode: string): LocalityCode {
   return {
     type: 'LocalityCode',

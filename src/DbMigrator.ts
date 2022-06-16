@@ -1,4 +1,5 @@
 import Db from './Db';
+import HijrisRepository from './repositories/HijrisRepository';
 import PreferencesRepository from './repositories/PreferencesRepository';
 import SystemPreferencesRepository from './repositories/SystemPreferencesRepository';
 import TimesRepository from './repositories/TimesRepository';
@@ -27,6 +28,7 @@ async function migrate(
     ...SystemPreferencesRepository.migrations(),
     ...ZonesRepository.migrations(),
     ...TimesRepository.migrations(),
+    ...HijrisRepository.migrations(),
   ],
 ): Promise<void> {
   const statement = generateCreateTableStatement(
