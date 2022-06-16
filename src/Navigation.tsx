@@ -5,7 +5,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import OnboardingScreen from './screens/OnboardingScreen';
 import RNHome from './screens/RNHome';
 import { RootStackParamList } from './navigation-types';
-import SplashScreen from './screens/SplashScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -24,10 +23,15 @@ const MainScreen: () => React.ReactElement = () => {
   );
 };
 
-const Navigation = () => {
+interface Props {
+  initialRouteName?: keyof RootStackParamList;
+}
+
+const Navigation: React.FC<Props> = ({ initialRouteName }) => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Splash" component={SplashScreen} />
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="Main" component={MainScreen} />
     </Stack.Navigator>
