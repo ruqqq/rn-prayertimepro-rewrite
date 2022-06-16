@@ -51,11 +51,15 @@ function migrations(): [MigrationId, MigrationStatements][] {
 
 async function getTimesForDay(
   date: DailyPrayertimes.DateOnly,
-): Promise<DailyPrayertimes.T> {
+): Promise<DailyPrayertimes.T | null> {
   const results = await Db.query(
     `SELECT * FROM ${TimesTableName} WHERE ${TimesColumns.date} = ? ORDER BY ${TimesColumns.prayer_id} ASC`,
     [valueOf(date)],
   );
+  if (results.length === 0) {
+    return null;
+  }
+
   return DailyPrayertimes.fromDb(results);
 }
 
