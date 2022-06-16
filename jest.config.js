@@ -10,4 +10,14 @@ module.exports = {
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!(@react-native|react-native|react-native-vector-icons|react-native-onboarding-swiper|react-native-ui-lib|react-native-reanimated|react-native-gesture-handler)/).*/',
   ],
+  reporters: [
+    'default',
+    [
+      'jest-html-reporters',
+      {
+        publicPath: './html-report',
+        filename: 'report.html',
+      },
+    ],
+  ],
 };

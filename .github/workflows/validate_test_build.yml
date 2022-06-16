@@ -1,4 +1,4 @@
-name: Android Debug Build
+name: Validate, Test and Build Android Debug APK
 
 on:
   push:
@@ -7,15 +7,49 @@ on:
       - releases/*
 
 jobs:
-  android-build:
-    name: Android Build
-    runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
+  validate-and-test:
+    name: Validate and Test
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Check out Git repository # clone the repo to local ci workspace
+      - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - name: Set up our JDK environment # setup JDK environment: mandatory as we need to build  android project
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Restore node_modules from cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Validate
+        run: yarn validate
+
+      - name: Test with coverage
+        run: yarn test --coverage
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: html-report
+
+  android-build:
+    name: Android Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up our JDK environment
         uses: actions/setup-java@v1.4.3
         with:
           java-version: '18'

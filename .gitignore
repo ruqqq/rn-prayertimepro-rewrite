@@ -61,3 +61,5 @@ buck-out/
 /vendor/bundle/
 
 tsconfig.*.json
+/coverage/
+/html-report/
