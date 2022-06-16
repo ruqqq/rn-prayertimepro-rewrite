@@ -43,6 +43,7 @@ jobs:
 
   android-build:
     name: Android Build
+    needs: validate-and-test
     runs-on: ubuntu-latest
 
     steps:
