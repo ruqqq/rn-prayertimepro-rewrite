@@ -3,6 +3,7 @@ import { waitFor } from '@testing-library/react-native';
 import { resetAllWhenMocks, verifyAllWhenMocksCalled, when } from 'jest-when';
 import DbMigrator from './DbMigrator';
 import SystemPreferencesRepository from './repositories/SystemPreferencesRepository';
+import SplashScreen from 'react-native-splash-screen';
 import useAppInitEffect from './useAppInitEffect';
 
 jest.mock('./Db');
@@ -12,6 +13,7 @@ jest.mock('./repositories/SystemPreferencesRepository');
 describe('useAppInitEffect', () => {
   beforeEach(() => {
     jest.spyOn(DbMigrator, 'migrate');
+    jest.spyOn(SplashScreen, 'hide');
   });
 
   afterEach(() => {
@@ -20,12 +22,13 @@ describe('useAppInitEffect', () => {
     jest.restoreAllMocks();
   });
 
-  it('should migrate db on load and set isReady = true', async () => {
+  it('should migrate db on load and set isReady = true and hide splash screen', async () => {
     const { result } = renderHook(() => useAppInitEffect());
 
     await waitFor(() => {
       expect(result.current.isReady).toBeTruthy();
       expect(DbMigrator.migrate).toHaveBeenCalledTimes(1);
+      expect(SplashScreen.hide).toHaveBeenCalledTimes(1);
     });
   });
 

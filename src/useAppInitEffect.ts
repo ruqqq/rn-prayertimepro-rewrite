@@ -3,6 +3,7 @@ import Db from './Db';
 import DbMigrator from './DbMigrator';
 import { RootStackParamList } from './navigation-types';
 import SystemPreferencesRepository from './repositories/SystemPreferencesRepository';
+import SplashScreen from 'react-native-splash-screen';
 
 export default function useAppInitEffect() {
   const [isReady, setIsReady] = useState<boolean>(false);
@@ -29,4 +30,5 @@ async function init(
     setInitialRouteName('Main');
   }
   setIsReady(true);
+  SplashScreen.hide();
 }
