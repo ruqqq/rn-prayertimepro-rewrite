@@ -129,3 +129,21 @@ export function toDb(zone: Zone): {
     timezone: valueOf(zone.timezone),
   };
 }
+
+export function toDto(zone: Zone): {
+  code: string;
+  state: string;
+  city: string;
+  lat: number;
+  lng: number;
+  timezone: string;
+} {
+  return {
+    code: valueOf(zone.code),
+    state: valueOf(zone.state),
+    city: valueOf(zone.city),
+    lat: valueOf(zone.lat),
+    lng: valueOf(zone.lng),
+    timezone: valueOf(zone.timezone),
+  };
+}

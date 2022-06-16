@@ -1,4 +1,7 @@
 import formatISO from 'date-fns/formatISO';
+import getDate from 'date-fns/getDate';
+import getMonth from 'date-fns/getMonth';
+import getYear from 'date-fns/getYear';
 import parseJSON from 'date-fns/parseJSON';
 import set from 'date-fns/set';
 import toDate from 'date-fns/toDate';
@@ -181,4 +184,24 @@ export function toDb(prayertimes: DailyPrayertimes): {
     time: valueOf(time),
     updated: valueOf(prayertimes.updated),
   }));
+}
+
+export function toDto(prayertimes: DailyPrayertimes): {
+  date: number;
+  month: number;
+  year: number;
+  localityCode: string;
+  source_id: number;
+  times: [string, string, string, string, string, string];
+  updated: string;
+} {
+  return {
+    date: getDate(prayertimes.date.date),
+    month: getMonth(prayertimes.date.date),
+    year: getYear(prayertimes.date.date),
+    localityCode: valueOf(prayertimes.localityCode),
+    source_id: valueOf(prayertimes.sourceId),
+    times: Object.values(prayertimes.times).map(time => valueOf(time)) as any,
+    updated: valueOf(prayertimes.updated),
+  };
 }

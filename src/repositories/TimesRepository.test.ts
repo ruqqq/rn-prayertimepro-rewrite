@@ -1,7 +1,7 @@
 import Db from '../Db';
 import DbMigrator from '../DbMigrator';
 import * as DailyPrayertimes from '../domain/DailyPrayertimes';
-import { dateOnlyOf } from '../domain/DailyPrayertimes';
+import { dateOnlyOf, toDto } from '../domain/DailyPrayertimes';
 import TimesRepository from './TimesRepository';
 
 describe('TimesRepository', () => {
@@ -86,13 +86,14 @@ describe('TimesRepository', () => {
       ] as [string, string, string, string, string, string],
       updated: '2022-01-31T03:48:24.352Z',
     };
+    const dailyPrayertimes = DailyPrayertimes.fromDto(dto);
     await TimesRepository.upsertTimes([DailyPrayertimes.fromDto(dto)]);
 
-    const dailyPrayertimes = await TimesRepository.getTimesForDay(
+    const dailyPrayertimesResult = await TimesRepository.getTimesForDay(
       dateOnlyOf(1, 6, 2022),
     );
 
-    expect(dailyPrayertimes).not.toBeNull();
+    expect(toDto(dailyPrayertimesResult!)).toEqual(toDto(dailyPrayertimes));
   });
 
   it("should return null when getting prayertimes for the day when there's no data", async () => {
