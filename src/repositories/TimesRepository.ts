@@ -1,5 +1,6 @@
 import Db from '../Db';
 import * as DailyPrayertimes from '../domain/DailyPrayertimes';
+import { LocalityCode } from '../domain/DailyPrayertimes';
 import { valueOf } from '../domain/utils';
 import {
   generateCreateTableStatement,
@@ -50,11 +51,12 @@ function migrations(): [MigrationId, MigrationStatements][] {
 }
 
 async function getTimesForDay(
+  localityCode: LocalityCode,
   date: DailyPrayertimes.DateOnly,
 ): Promise<DailyPrayertimes.T | null> {
   const results = await Db.query(
-    `SELECT * FROM ${TimesTableName} WHERE ${TimesColumns.date} = ? ORDER BY ${TimesColumns.prayer_id} ASC`,
-    [valueOf(date)],
+    `SELECT * FROM ${TimesTableName} WHERE ${TimesColumns.locality_code} = ? AND ${TimesColumns.date} = ? ORDER BY ${TimesColumns.prayer_id} ASC`,
+    [valueOf(localityCode), valueOf(date)],
   );
   if (results.length === 0) {
     return null;

@@ -1,5 +1,5 @@
 import Db from '../Db';
-import { DateOnly } from '../domain/DailyPrayertimes';
+import { DateOnly, LocalityCode } from '../domain/DailyPrayertimes';
 import { valueOf } from '../domain/utils';
 import * as Hijri from '../domain/Hijri';
 import {
@@ -48,10 +48,13 @@ function migrations(): [MigrationId, MigrationStatements][] {
   ];
 }
 
-async function getHijrisForDay(date: DateOnly): Promise<Hijri.T | null> {
+async function getHijrisForDay(
+  localityCode: LocalityCode,
+  date: DateOnly,
+): Promise<Hijri.T | null> {
   const results = await Db.query(
-    `SELECT * FROM ${HijrisTableName} WHERE ${HijrisColumns.date} = ?`,
-    [valueOf(date)],
+    `SELECT * FROM ${HijrisTableName} WHERE ${HijrisColumns.locality_code} = ? AND ${HijrisColumns.date} = ?`,
+    [valueOf(localityCode), valueOf(date)],
   );
   if (results.length === 0) {
     return null;
@@ -60,10 +63,17 @@ async function getHijrisForDay(date: DateOnly): Promise<Hijri.T | null> {
   return Hijri.fromDb(results[0]);
 }
 
-async function getHijrisForYear(year: number): Promise<Hijri.T[]> {
+async function getHijrisForYear(
+  localityCode: LocalityCode,
+  year: number,
+): Promise<Hijri.T[]> {
   const results = await Db.query(
-    `SELECT * FROM ${HijrisTableName} WHERE ${HijrisColumns.date} >= ? and ${HijrisColumns.date} <= ? ORDER BY ${HijrisColumns.date} ASC`,
-    [formatISO(new Date(year, 1, 1)), formatISO(new Date(year, 12, 31))],
+    `SELECT * FROM ${HijrisTableName} WHERE ${HijrisColumns.locality_code} = ? AND ${HijrisColumns.date} >= ? and ${HijrisColumns.date} <= ? ORDER BY ${HijrisColumns.date} ASC`,
+    [
+      valueOf(localityCode),
+      formatISO(new Date(year, 1, 1)),
+      formatISO(new Date(year, 12, 31)),
+    ],
   );
 
   return results.map(Hijri.fromDb);

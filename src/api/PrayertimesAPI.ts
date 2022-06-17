@@ -28,11 +28,11 @@ export type DailyPrayertimesAPIResponse = {
   year: number;
   localityCode: string;
   source_id: number;
-  times: string[6];
+  times: [string, string, string, string, string, string];
   updated: string;
 };
 
-export type YearlyPrayertimesAPIResponse = DailyPrayertimesAPIResponse[][12];
+export type YearlyPrayertimesAPIResponse = DailyPrayertimesAPIResponse[][];
 
 async function getTimesForYear(
   countryCode: string,
@@ -58,7 +58,7 @@ export type DailyHijriAPIResponse = {
   source_id: number;
 };
 
-export type YearlyHijrisAPIResponse = DailyHijriAPIResponse[][12];
+export type YearlyHijrisAPIResponse = DailyHijriAPIResponse[][];
 
 async function getHijrisForYear(
   countryCode: string,

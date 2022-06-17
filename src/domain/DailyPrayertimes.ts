@@ -91,10 +91,15 @@ export function sourceIdOf(sourceId: number): SourceId {
   };
 }
 
-export type LocalityCode = ValueType<'LocalityCode', string>;
+export type LocalityCode = ValueType<'LocalityCode', string> & {
+  countryCode: string;
+  locality: string;
+};
 export function localityCodeOf(localityCode: string): LocalityCode {
   return {
     type: 'LocalityCode',
+    countryCode: localityCode.split('-')[0],
+    locality: localityCode.split('-')[1],
     value: () => localityCode,
   };
 }

@@ -1,7 +1,7 @@
 import Db from '../Db';
 import DbMigrator from '../DbMigrator';
 import * as Hijri from '../domain/Hijri';
-import { dateOnlyOf } from '../domain/DailyPrayertimes';
+import { dateOnlyOf, localityCodeOf } from '../domain/DailyPrayertimes';
 import HijrisRepository from './HijrisRepository';
 
 describe('HijrisRepository', () => {
@@ -69,13 +69,45 @@ describe('HijrisRepository', () => {
       source_id: 0,
     };
     const hijri = Hijri.fromDto(dto);
-    await HijrisRepository.upsertHijris([Hijri.fromDto(dto)]);
+    await HijrisRepository.upsertHijris([hijri]);
 
     const hijriResult = await HijrisRepository.getHijrisForDay(
+      localityCodeOf('SG-1'),
       dateOnlyOf(1, 6, 2022),
     );
 
     expect(Hijri.toDto(hijriResult!)).toEqual(Hijri.toDto(hijri));
+  });
+
+  it("should return null when getting hijri for the day when there's no data for the localityCode", async () => {
+    const dto = {
+      date: 1,
+      month: 6,
+      year: 2022,
+      hijriDate: 1,
+      hijriMonth: 2,
+      hijriYear: 1500,
+      localityCode: 'SG-1',
+      source_id: 0,
+    };
+    const hijri = Hijri.fromDto(dto);
+    await HijrisRepository.upsertHijris([hijri]);
+
+    const hijriResult = await HijrisRepository.getHijrisForDay(
+      localityCodeOf('MY-JHR01'),
+      dateOnlyOf(1, 6, 2022),
+    );
+
+    expect(hijriResult).toBeNull();
+  });
+
+  it("should return null when getting hijri for the day when there's no data", async () => {
+    const hijri = await HijrisRepository.getHijrisForDay(
+      localityCodeOf('SG-1'),
+      dateOnlyOf(1, 6, 2022),
+    );
+
+    expect(hijri).toBeNull();
   });
 
   it('should get the hijri for the year sorted by date asc', async () => {
@@ -107,18 +139,35 @@ describe('HijrisRepository', () => {
     const hijri4 = Hijri.fromDto(dto4);
     await HijrisRepository.upsertHijris([hijri1, hijri2, hijri3, hijri4]);
 
-    const hijris = await HijrisRepository.getHijrisForYear(2022);
+    const hijris = await HijrisRepository.getHijrisForYear(
+      localityCodeOf('SG-1'),
+      2022,
+    );
 
     expect(hijris.map(Hijri.toDto)).toEqual(
       [hijri4, hijri2, hijri1].map(Hijri.toDto),
     );
   });
 
-  it("should return null when getting hijri for the day when there's no data", async () => {
-    const hijri = await HijrisRepository.getHijrisForDay(
-      dateOnlyOf(1, 6, 2022),
+  it("should return empty array when getting hijri for the day when there's no data for the localityCode", async () => {
+    const dto1 = {
+      date: 5,
+      month: 6,
+      year: 2022,
+      hijriDate: 1,
+      hijriMonth: 2,
+      hijriYear: 1500,
+      localityCode: 'SG-1',
+      source_id: 0,
+    };
+    const hijri1 = Hijri.fromDto(dto1);
+    await HijrisRepository.upsertHijris([hijri1]);
+
+    const hijris = await HijrisRepository.getHijrisForYear(
+      localityCodeOf('MY-JHR01'),
+      2022,
     );
 
-    expect(hijri).toBeNull();
+    expect(hijris).toHaveLength(0);
   });
 });
