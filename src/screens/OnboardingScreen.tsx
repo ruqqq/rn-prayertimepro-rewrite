@@ -50,14 +50,14 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             title: 'Salam!',
             subtitle: (
               <View>
-                <Text center={true}>
+                <Text center={true} grey10>
                   Thank you for downloading PrayerTime Pro.
                 </Text>
-                <Text center={true}>
+                <Text center={true} grey10>
                   To get started, select your location/area and touch the
                   Download button.
                 </Text>
-                <View style={{ margin: 12, marginTop: 24 }}>
+                <View margin-12 marginT-24>
                   {hasZoneData ? (
                     <Picker
                       migrateTextField
@@ -65,6 +65,9 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
                       topBarProps={{ title: 'Select Location' }}
                       placeholder="Select location"
                       showSearch={true}
+                      trailingAccessory={
+                        <MaterialCommunityIcons name="chevron-down" size={24} />
+                      }
                       editable={hasZoneData}
                       value={
                         selectedZone ? zoneItemKey(selectedZone) : undefined
@@ -124,7 +127,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
                     </Text>
                   ) : undefined}
 
-                  <Text center={true} marginT-10>
+                  <Text center={true} marginT-10 grey30>
                     (This will require your device to have access to mobile
                     data/WiFi)
                   </Text>
