@@ -9,7 +9,6 @@ import Text from 'react-native-ui-lib/text';
 import Picker from 'react-native-ui-lib/picker';
 import { useZonesDataEffect } from '../effects/ZonesDataEffect';
 import * as Zone from '../domain/Zone';
-import { valueOf } from '../domain/utils';
 import useDataDownloaderEffect from '../effects/DataDownloaderEffect';
 import { localityCodeFrom, localityCodeOf } from '../domain/DailyPrayertimes';
 
@@ -61,35 +60,37 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
                 button.
               </Text>
               <View style={{ margin: 12, marginTop: 24 }}>
-                <Picker
-                  migrateTextField
-                  topBarProps={{ title: 'Location/Area' }}
-                  placeholder={
-                    hasZoneData ? 'Select location/area' : 'Loading...'
-                  }
-                  showSearch={true}
-                  editable={hasZoneData}
-                  value={selectedZone ? zoneItemKey(selectedZone) : undefined}
-                  onChange={(item: { label: string; value: string }) => {
-                    const itemValueSplit = item.value.split('|');
-                    const matchingZone = zoneData.filter(
-                      zone =>
-                        valueOf(zone.country) === itemValueSplit[0] &&
-                        valueOf(zone.state) === itemValueSplit[1] &&
-                        valueOf(zone.city) === itemValueSplit[2] &&
-                        valueOf(zone.code) === itemValueSplit[3],
-                    )[0];
+                {hasZoneData ? (
+                  <Picker
+                    migrateTextField
+                    topBarProps={{ title: 'Location/Area' }}
+                    placeholder="Select location/area"
+                    showSearch={true}
+                    editable={hasZoneData}
+                    value={selectedZone ? zoneItemKey(selectedZone) : undefined}
+                    onChange={(item: { label: string; value: string }) => {
+                      const matchingZone = zoneData.filter(
+                        zone => zoneItemKey(zone) === item.value,
+                      )[0];
 
-                    setSelectedZone(matchingZone);
-                  }}>
-                  {zoneData.map(item => (
-                    <Picker.Item
-                      key={zoneItemKey(item)}
-                      value={zoneItemKey(item)}
-                      label={`${item.city}, ${item.state}`}
-                    />
-                  ))}
-                </Picker>
+                      setSelectedZone(matchingZone);
+                    }}>
+                    {zoneData.map(item => (
+                      <Picker.Item
+                        key={zoneItemKey(item)}
+                        value={zoneItemKey(item)}
+                        label={`${item.city}, ${item.state}`}
+                      />
+                    ))}
+                  </Picker>
+                ) : (
+                  <Picker
+                    key="Loading Picker"
+                    migrateTextField
+                    placeholder="Loading..."
+                    editable={false}
+                  />
+                )}
                 <Button
                   label={
                     hasData
@@ -121,13 +122,20 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
         {
           backgroundColor: '#fff',
           image: <></>,
-          title: 'Onboarding 2',
-          subtitle: <Button label="Done" onPress={onDone} />,
+          title: 'Permissions',
+          subtitle: <Button label="Grant Permission" disabled={!hasData} />,
+        },
+        {
+          backgroundColor: '#fff',
+          image: <></>,
+          title: "You're all set!",
+          subtitle: (
+            <Button label="Proceed" disabled={!hasData} onPress={onDone} />
+          ),
         },
       ]}
       showSkip={false}
       showDone={false}
-      showNext={hasData}
     />
   );
 };
