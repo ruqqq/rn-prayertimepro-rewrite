@@ -8,7 +8,7 @@ import {
   LocalityCode,
 } from '../domain/DailyPrayertimes';
 import TimesRepository from '../repositories/TimesRepository';
-import { valueOf } from '../domain/utils';
+import { useRefValue } from './RefValue';
 
 export function usePrayertimesDataEffect(
   localityCode: LocalityCode,
@@ -19,19 +19,24 @@ export function usePrayertimesDataEffect(
   const [downloadDataState, setDownloadDataState] = useState<DownloadDataState>(
     { state: 'idle' },
   );
+  const localityCodeRefValue = useRefValue(localityCode, () =>
+    setDownloadDataState({ state: 'idle' }),
+  );
+  const dateRefValue = useRefValue(date);
 
   const loadData = useCallback(() => {
     async function asyncCallback() {
-      const prayertimesData = await getPrayertimesData(localityCode, date);
+      const prayertimesData = await getPrayertimesData(
+        localityCodeRefValue,
+        dateRefValue,
+      );
       setData(prayertimesData);
       setHasData(!!prayertimesData);
     }
     asyncCallback();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [valueOf(localityCode), date]);
+  }, [localityCodeRefValue, dateRefValue]);
 
   useEffect(() => {
-    setDownloadDataState({ state: 'idle' });
     loadData();
   }, [loadData]);
 

@@ -4,7 +4,7 @@ import * as Hijri from '../domain/Hijri';
 import { DownloadDataState } from './util';
 import { LocalityCode } from '../domain/DailyPrayertimes';
 import HijrisRepository from '../repositories/HijrisRepository';
-import { valueOf } from '../domain/utils';
+import { useRefValue } from './RefValue';
 
 export function useHijrisDataEffect(localityCode: LocalityCode, year?: number) {
   const [data, setData] = useState<Hijri.T[]>([]);
@@ -13,15 +13,18 @@ export function useHijrisDataEffect(localityCode: LocalityCode, year?: number) {
     { state: 'idle' },
   );
 
+  const localityCodeRefValue = useRefValue(localityCode, () =>
+    setDownloadDataState({ state: 'idle' }),
+  );
+
   const loadData = useCallback(() => {
     async function asyncCallback() {
-      const hijris = await getHijrisData(localityCode, year);
+      const hijris = await getHijrisData(localityCodeRefValue, year);
       setData(hijris);
       setHasData(hijris.length > 0);
     }
     asyncCallback();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [valueOf(localityCode), year]);
+  }, [localityCodeRefValue, year]);
 
   useEffect(() => {
     setDownloadDataState({ state: 'idle' });
