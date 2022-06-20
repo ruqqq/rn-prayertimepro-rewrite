@@ -11,6 +11,7 @@ import { useZonesDataEffect } from '../effects/ZonesDataEffect';
 import * as Zone from '../domain/Zone';
 import useDataDownloaderEffect from '../effects/DataDownloaderEffect';
 import { localityCodeFrom, localityCodeOf } from '../domain/DailyPrayertimes';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type OnboardingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -115,6 +116,14 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
                     }
                     onPress={downloadData}
                   />
+
+                  {downloadDataState.state === 'error' ? (
+                    <Text center={true} marginT-10 red10>
+                      <MaterialCommunityIcons name="alert-circle" size={18} />{' '}
+                      Unable to download data. Please try again later.
+                    </Text>
+                  ) : undefined}
+
                   <Text center={true} marginT-10>
                     (This will require your device to have access to mobile
                     data/WiFi)
