@@ -38,11 +38,11 @@ async function getTimesForYear(
   locality: string,
   year: number,
 ): Promise<YearlyPrayertimesAPIResponse> {
-  const response = await axios.get(
-    `${constructDataBaseUrl(
-      PRAYERTIMES_REPO_PATH,
-    )}/data/${countryCode}/${locality}/${year}.json`,
-  );
+  const url = `${constructDataBaseUrl(
+    PRAYERTIMES_REPO_PATH,
+  )}/data/${countryCode}/${locality}/${year}.json`;
+  console.log(`GET ${url}`);
+  const response = await axios.get(url);
   return response.data;
 }
 
