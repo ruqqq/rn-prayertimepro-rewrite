@@ -75,13 +75,19 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
 
                       setSelectedZone(matchingZone);
                     }}>
-                    {zoneData.map(item => (
-                      <Picker.Item
-                        key={zoneItemKey(item)}
-                        value={zoneItemKey(item)}
-                        label={`${item.city}, ${item.state}`}
-                      />
-                    ))}
+                    {zoneData
+                      .sort((a, b) =>
+                        `${a.city}, ${a.state}`.localeCompare(
+                          `${b.city}, ${b.state}`,
+                        ),
+                      )
+                      .map(item => (
+                        <Picker.Item
+                          key={zoneItemKey(item)}
+                          value={zoneItemKey(item)}
+                          label={zoneLabel(item)}
+                        />
+                      ))}
                   </Picker>
                 ) : (
                   <Picker
@@ -142,6 +148,10 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
 
 function zoneItemKey(zone: Zone.T) {
   return `${zone.country}|${zone.state}|${zone.city}|${zone.code}`;
+}
+
+function zoneLabel(zone: Zone.T) {
+  return `${zone.city}, ${zone.state}`;
 }
 
 export default OnboardingScreen;
