@@ -35,7 +35,7 @@ export function useHijrisDataEffect(localityCode: LocalityCode, year?: number) {
     async function asyncCallback() {
       setDownloadDataState({ state: 'downloading' });
       try {
-        await downloadHijris(localityCode, year);
+        await downloadHijris(localityCodeRefValue, year);
         setDownloadDataState({ state: 'downloaded' });
         loadData();
       } catch (e) {
@@ -43,7 +43,7 @@ export function useHijrisDataEffect(localityCode: LocalityCode, year?: number) {
       }
     }
     asyncCallback();
-  }, [loadData, localityCode, year]);
+  }, [loadData, localityCodeRefValue, year]);
 
   return {
     data,

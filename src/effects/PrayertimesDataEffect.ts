@@ -44,7 +44,10 @@ export function usePrayertimesDataEffect(
     async function asyncCallback() {
       setDownloadDataState({ state: 'downloading' });
       try {
-        await downloadPrayertimes(localityCode, date?.date.getFullYear());
+        await downloadPrayertimes(
+          localityCodeRefValue,
+          dateRefValue?.date.getFullYear(),
+        );
         setDownloadDataState({ state: 'downloaded' });
         loadData();
       } catch (e) {
@@ -52,7 +55,7 @@ export function usePrayertimesDataEffect(
       }
     }
     asyncCallback();
-  }, [loadData, localityCode, date]);
+  }, [loadData, localityCodeRefValue, dateRefValue]);
 
   return {
     data,
