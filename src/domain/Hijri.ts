@@ -104,7 +104,7 @@ export function toDto(hijri: Hijri): {
 } {
   return {
     date: getDate(hijri.date.date),
-    month: getMonth(hijri.date.date),
+    month: getMonth(hijri.date.date) + 1,
     year: getYear(hijri.date.date),
     hijriDate: hijri.hijriDate.hijriDate,
     hijriMonth: hijri.hijriDate.hijriMonth,
