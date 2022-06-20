@@ -27,16 +27,16 @@ export type MusollasAPIResponse = {
 };
 
 async function getMusollas(): Promise<MusollasAPIResponse> {
-  const response = await axios.get(
-    `${constructDataBaseUrl(MUSOLLA_REPO_PATH)}/data.json`,
-  );
+  const url = `${constructDataBaseUrl(MUSOLLA_REPO_PATH)}/data.json`;
+  console.log(`GET ${url}`);
+  const response = await axios.get(url);
   return response.data;
 }
 
 async function getMusollasLatestSHA(): Promise<string> {
-  const response = await axios.get(
-    `${constructMetaBaseUrl(MUSOLLA_REPO_PATH)}`,
-  );
+  const url = `${constructMetaBaseUrl(MUSOLLA_REPO_PATH)}`;
+  console.log(`GET ${url}`);
+  const response = await axios.get(url);
   return response.data.sha;
 }
 
