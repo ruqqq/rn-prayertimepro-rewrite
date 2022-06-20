@@ -6,6 +6,7 @@ import parseJSON from 'date-fns/parseJSON';
 import set from 'date-fns/set';
 import toDate from 'date-fns/toDate';
 import { valueOf, ValueType } from './utils';
+import * as Zone from './Zone';
 
 export type DateOnly = ValueType<'DateOnly', string> & {
   date: Date;
@@ -16,7 +17,7 @@ export function dateOnlyOf(
   month: number,
   year: number,
 ): DateOnly {
-  const date = set(toDate(new Date(year, month, dateOfMonth)), {
+  const date = set(toDate(new Date(year, month - 1, dateOfMonth)), {
     hours: 0,
     minutes: 0,
     seconds: 0,
@@ -101,6 +102,15 @@ export function localityCodeOf(localityCode: string): LocalityCode {
     countryCode: localityCode.split('-')[0],
     locality: localityCode.split('-')[1],
     value: () => localityCode,
+  };
+}
+
+export function localityCodeFrom(zone: Zone.T): LocalityCode {
+  return {
+    type: 'LocalityCode',
+    countryCode: zone.country.value(),
+    locality: zone.code.value(),
+    value: () => `${zone.country.value()}-${zone.code.value()}`,
   };
 }
 

@@ -1,10 +1,11 @@
 import { valueOf, ValueType } from './utils';
 
-type ZoneCode = ValueType<'ZoneCode', string>;
+export type ZoneCode = ValueType<'ZoneCode', string>;
 export function zoneCodeOf(code: string): ZoneCode {
   return {
     type: 'ZoneCode',
     value: () => code,
+    toString: () => code,
   };
 }
 
@@ -13,6 +14,7 @@ export function stateOf(state: string): State {
   return {
     type: 'State',
     value: () => state,
+    toString: () => state,
   };
 }
 
@@ -21,6 +23,7 @@ export function cityOf(city: string): City {
   return {
     type: 'City',
     value: () => city,
+    toString: () => city,
   };
 }
 
@@ -29,6 +32,7 @@ export function countryOf(country: string): Country {
   return {
     type: 'Country',
     value: () => country,
+    toString: () => country,
   };
 }
 
@@ -37,12 +41,14 @@ export function countryFromState(state: string): Country {
     return {
       type: 'Country',
       value: () => 'SG',
+      toString: () => 'SG',
     };
   }
 
   return {
     type: 'Country',
     value: () => 'MY',
+    toString: () => 'MY',
   };
 }
 
@@ -51,6 +57,7 @@ export function latLngOf(latLng: number): LatLng {
   return {
     type: 'LatLng',
     value: () => latLng,
+    toString: () => `${latLng}`,
   };
 }
 
@@ -60,6 +67,7 @@ export function timezoneOf(timezone: string): Timezone {
     return {
       type: 'Timezone',
       value: () => timezone,
+      toString: () => timezone,
     };
   }
 

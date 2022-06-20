@@ -15,7 +15,6 @@ export type ZonesAPIResponse = {
 };
 
 async function getZones(): Promise<ZonesAPIResponse> {
-  console.log(`${constructDataBaseUrl(PRAYERTIMES_REPO_PATH)}/data/zones.json`);
   const response = await axios.get(
     `${constructDataBaseUrl(PRAYERTIMES_REPO_PATH)}/data/zones.json`,
   );
@@ -65,21 +64,19 @@ async function getHijrisForYear(
   locality: string,
   year: number,
 ): Promise<YearlyHijrisAPIResponse> {
-  console.log(
-    `${constructDataBaseUrl(
-      PRAYERTIMES_REPO_PATH,
-    )}/hijri/${year}/${countryCode}-${locality}.json`,
-  );
+  // The API has no support for other locality yet
   const response = await axios.get(
-    `${constructDataBaseUrl(
-      PRAYERTIMES_REPO_PATH,
-    )}/hijri/${year}/${countryCode}-${locality}.json`,
+    `${constructDataBaseUrl(PRAYERTIMES_REPO_PATH)}/hijri/${year}/SG-1.json`,
   );
-  return response.data;
+  return response.data.map((months: any[]) =>
+    months.map(item => ({
+      ...item,
+      localityCode: `${countryCode}-${locality}`,
+    })),
+  );
 }
 
 async function getPrayertimesLatestSHA(): Promise<string> {
-  console.log(`${constructMetaBaseUrl(PRAYERTIMES_REPO_PATH)}`);
   const response = await axios.get(
     `${constructMetaBaseUrl(PRAYERTIMES_REPO_PATH)}`,
   );
