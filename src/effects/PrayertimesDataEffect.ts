@@ -31,6 +31,7 @@ export function usePrayertimesDataEffect(
   }, [valueOf(localityCode), date]);
 
   useEffect(() => {
+    setDownloadDataState({ state: 'idle' });
     loadData();
   }, [loadData]);
 

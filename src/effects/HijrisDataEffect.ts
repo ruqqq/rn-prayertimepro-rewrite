@@ -24,6 +24,7 @@ export function useHijrisDataEffect(localityCode: LocalityCode, year?: number) {
   }, [valueOf(localityCode), year]);
 
   useEffect(() => {
+    setDownloadDataState({ state: 'idle' });
     loadData();
   }, [loadData]);
 

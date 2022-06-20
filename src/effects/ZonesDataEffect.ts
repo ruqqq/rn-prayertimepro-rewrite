@@ -21,6 +21,7 @@ export function useZonesDataEffect() {
   }, [setData, setHasData]);
 
   useEffect(() => {
+    setDownloadDataState({ state: 'idle' });
     loadData();
   }, [loadData]);
 

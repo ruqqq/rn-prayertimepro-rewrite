@@ -4,9 +4,9 @@ import { RootStackParamList } from '../navigation-types';
 import Onboarding from 'react-native-onboarding-swiper';
 import Button from 'react-native-ui-lib/button';
 import SystemPreferencesRepository from '../repositories/SystemPreferencesRepository';
-import { View } from 'react-native';
 import Text from 'react-native-ui-lib/text';
 import Picker from 'react-native-ui-lib/picker';
+import View from 'react-native-ui-lib/view';
 import { useZonesDataEffect } from '../effects/ZonesDataEffect';
 import * as Zone from '../domain/Zone';
 import useDataDownloaderEffect from '../effects/DataDownloaderEffect';
@@ -28,10 +28,6 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
     selectedZone ? localityCodeFrom(selectedZone) : localityCodeOf('SG-1'),
   );
 
-  if (downloadDataState.state === 'error') {
-    console.error(downloadDataState.error);
-  }
-
   useEffect(() => {
     if (hasZoneData === false) {
       downloadZoneData();
@@ -44,105 +40,108 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
   }
 
   return (
-    <Onboarding
-      pages={[
-        {
-          backgroundColor: '#fff',
-          image: <></>,
-          title: 'Salam!',
-          subtitle: (
-            <View>
-              <Text center={true}>
-                Thank you for downloading PrayerTime Pro.
-              </Text>
-              <Text center={true}>
-                To get started, select your location/area and touch the Download
-                button.
-              </Text>
-              <View style={{ margin: 12, marginTop: 24 }}>
-                {hasZoneData ? (
-                  <Picker
-                    migrateTextField
-                    topBarProps={{ title: 'Location/Area' }}
-                    placeholder="Select location/area"
-                    showSearch={true}
-                    editable={hasZoneData}
-                    value={selectedZone ? zoneItemKey(selectedZone) : undefined}
-                    onChange={(item: { label: string; value: string }) => {
-                      const matchingZone = zoneData.filter(
-                        zone => zoneItemKey(zone) === item.value,
-                      )[0];
-
-                      setSelectedZone(matchingZone);
-                    }}>
-                    {zoneData
-                      .sort((a, b) =>
-                        `${a.city}, ${a.state}`.localeCompare(
-                          `${b.city}, ${b.state}`,
-                        ),
-                      )
-                      .map(item => (
-                        <Picker.Item
-                          key={zoneItemKey(item)}
-                          value={zoneItemKey(item)}
-                          label={zoneLabel(item)}
-                        />
-                      ))}
-                  </Picker>
-                ) : (
-                  <Picker
-                    key="Loading Picker"
-                    migrateTextField
-                    placeholder="Loading..."
-                    editable={false}
-                  />
-                )}
-                <Button
-                  label={
-                    hasData
-                      ? 'Downloaded!'
-                      : downloadDataState.state === 'downloading'
-                      ? 'Downloading...'
-                      : downloadDataState.state === 'error'
-                      ? 'Error'
-                      : 'Download'
-                  }
-                  disabled={
-                    !hasZoneData ||
-                    !selectedZone ||
-                    hasData ||
-                    ['downloading', 'downloaded'].some(
-                      state => state === downloadDataState.state,
-                    )
-                  }
-                  onPress={downloadData}
-                />
+    <>
+      <Onboarding
+        pages={[
+          {
+            backgroundColor: '#fff',
+            image: <></>,
+            title: 'Salam!',
+            subtitle: (
+              <View>
                 <Text center={true}>
-                  (This will require your device to have access to mobile
-                  data/WiFi)
+                  Thank you for downloading PrayerTime Pro.
                 </Text>
+                <Text center={true}>
+                  To get started, select your location/area and touch the
+                  Download button.
+                </Text>
+                <View style={{ margin: 12, marginTop: 24 }}>
+                  {hasZoneData ? (
+                    <Picker
+                      migrateTextField
+                      autoCorrect={false}
+                      topBarProps={{ title: 'Select Location' }}
+                      placeholder="Select location"
+                      showSearch={true}
+                      editable={hasZoneData}
+                      value={
+                        selectedZone ? zoneItemKey(selectedZone) : undefined
+                      }
+                      onChange={(item: { label: string; value: string }) => {
+                        const matchingZone = zoneData.filter(
+                          zone => zoneItemKey(zone) === item.value,
+                        )[0];
+
+                        setSelectedZone(matchingZone);
+                      }}>
+                      {zoneData
+                        .sort((a, b) =>
+                          `${a.city}, ${a.state}`.localeCompare(
+                            `${b.city}, ${b.state}`,
+                          ),
+                        )
+                        .map(item => (
+                          <Picker.Item
+                            key={zoneItemKey(item)}
+                            value={zoneItemKey(item)}
+                            label={zoneLabel(item)}
+                          />
+                        ))}
+                    </Picker>
+                  ) : (
+                    <Picker
+                      key="Loading Picker"
+                      migrateTextField
+                      placeholder="Loading..."
+                      editable={false}
+                    />
+                  )}
+                  <Button
+                    label={
+                      hasData
+                        ? 'Downloaded!'
+                        : downloadDataState.state === 'downloading'
+                        ? 'Downloading...'
+                        : 'Download'
+                    }
+                    disabled={
+                      !hasZoneData ||
+                      !selectedZone ||
+                      hasData ||
+                      ['downloading', 'downloaded'].some(
+                        state => state === downloadDataState.state,
+                      )
+                    }
+                    onPress={downloadData}
+                  />
+                  <Text center={true} marginT-10>
+                    (This will require your device to have access to mobile
+                    data/WiFi)
+                  </Text>
+                </View>
               </View>
-            </View>
-          ),
-        },
-        {
-          backgroundColor: '#fff',
-          image: <></>,
-          title: 'Permissions',
-          subtitle: <Button label="Grant Permission" disabled={!hasData} />,
-        },
-        {
-          backgroundColor: '#fff',
-          image: <></>,
-          title: "You're all set!",
-          subtitle: (
-            <Button label="Proceed" disabled={!hasData} onPress={onDone} />
-          ),
-        },
-      ]}
-      showSkip={false}
-      showDone={false}
-    />
+            ),
+          },
+          {
+            backgroundColor: '#fff',
+            image: <></>,
+            title: 'Permissions',
+            subtitle: <Button label="Grant Permission" disabled={!hasData} />,
+          },
+          {
+            backgroundColor: '#fff',
+            image: <></>,
+            title: "You're all set!",
+            subtitle: (
+              <Button label="Proceed" disabled={!hasData} onPress={onDone} />
+            ),
+          },
+        ]}
+        showSkip={false}
+        showDone={false}
+      />
+    </>
   );
 };
 
