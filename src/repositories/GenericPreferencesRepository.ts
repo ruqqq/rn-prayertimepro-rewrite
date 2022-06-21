@@ -44,8 +44,8 @@ class GenericPreferencesRepository<IdTypes, Ids extends keyof IdTypes> {
     await Db.insert(
       `INSERT INTO ${this.tableName} (${this.columns.join(
         ', ',
-      )}) VALUES (?, ?)`,
-      [id as any, `${value}`],
+      )}) VALUES (?, ?) ON CONFLICT (id) DO UPDATE SET value=?`,
+      [id as any, `${value}`, `${value}`],
     );
   }
 
@@ -53,6 +53,10 @@ class GenericPreferencesRepository<IdTypes, Ids extends keyof IdTypes> {
     await Db.executeSql(`DELETE FROM ${this.tableName} WHERE id = ?`, [
       id as any,
     ]);
+  }
+
+  public getDefaultValues() {
+    return this.defaultValues;
   }
 
   public migrations(): [MigrationId, MigrationStatements][] {

@@ -1,3 +1,4 @@
+import { LocalityCode, localityCodeOf } from './DailyPrayertimes';
 import { valueOf, ValueType } from './utils';
 
 export type ZoneCode = ValueType<'ZoneCode', string>;
@@ -74,6 +75,7 @@ type Zone = {
   lat: LatLng;
   lng: LatLng;
   timezone: Timezone;
+  localityCode: LocalityCode;
 };
 export type T = Zone;
 
@@ -93,6 +95,9 @@ export function fromDto(dto: {
     lat: latLngOf(dto.lat),
     lng: latLngOf(dto.lng),
     timezone: timezoneOf(dto.timezone),
+    localityCode: localityCodeOf(
+      `${countryFromState(dto.state).value}-${dto.code}`,
+    ),
   };
 }
 
@@ -113,6 +118,9 @@ export function fromDb(dbValues: {
     lat: latLngOf(dbValues.lat),
     lng: latLngOf(dbValues.lng),
     timezone: timezoneOf(dbValues.timezone),
+    localityCode: localityCodeOf(
+      `${countryFromState(dbValues.state).value}-${dbValues.code}`,
+    ),
   };
 }
 

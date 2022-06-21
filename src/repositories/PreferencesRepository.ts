@@ -17,9 +17,9 @@ const PreferencesColumnTypes = {
   value: 'TEXT NOT NULL',
 };
 
-const PreferencesPrimaryKey = [PreferencesColumns.id, PreferencesColumns.value];
+const PreferencesPrimaryKey = [PreferencesColumns.id];
 
-type PreferencesTypes = {
+export type PreferencesTypes = {
   locality_city: string;
   locality_code: string;
   notification_sound: string;

@@ -17,12 +17,9 @@ const SystemPreferencesColumnTypes = {
   value: 'TEXT NOT NULL',
 };
 
-const SystemPreferencesPrimaryKey = [
-  SystemPreferencesColumns.id,
-  SystemPreferencesColumns.value,
-];
+const SystemPreferencesPrimaryKey = [SystemPreferencesColumns.id];
 
-type SystemPreferencesTypes = {
+export type SystemPreferencesTypes = {
   prayertimes_data_sha: string;
   general_data_loaded: boolean;
   city_data_loaded: boolean;

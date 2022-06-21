@@ -12,6 +12,10 @@ import * as Zone from '../domain/Zone';
 import useDataDownloaderEffect from '../effects/DataDownloaderEffect';
 import { localityCodeFrom, localityCodeOf } from '../domain/DailyPrayertimes';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  usePreferenceEffect,
+  useSystemPreferenceEffect,
+} from '../effects/PreferenceEffect';
 
 type OnboardingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -28,6 +32,13 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
   const { hasData, downloadData, downloadDataState } = useDataDownloaderEffect(
     selectedZone ? localityCodeFrom(selectedZone) : localityCodeOf('SG-1'),
   );
+  const [localityCityPref, setLocalityCityPref] =
+    usePreferenceEffect('locality_city');
+  const [localityCodePref, setLocalityCodePref] =
+    usePreferenceEffect('locality_code');
+  const [, setOnboardingCompleted] = useSystemPreferenceEffect(
+    'onboarding_completed',
+  );
 
   useEffect(() => {
     if (hasZoneData === false) {
@@ -35,8 +46,22 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
     }
   }, [downloadZoneData, hasZoneData]);
 
+  useEffect(() => {
+    if (!zoneData) {
+      return;
+    }
+
+    const matchingZone = zoneData.filter(
+      zone =>
+        zone.localityCode.value === localityCodePref &&
+        zone.city.value === localityCityPref,
+    )[0];
+    setSelectedZone(matchingZone);
+  }, [localityCityPref, localityCodePref, zoneData]);
+
   async function onDone(): Promise<void> {
     await SystemPreferencesRepository.set('onboarding_completed', true);
+    setOnboardingCompleted(true);
     navigation.replace('Main');
   }
 
@@ -78,6 +103,8 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
                         )[0];
 
                         setSelectedZone(matchingZone);
+                        setLocalityCityPref(matchingZone.city.value);
+                        setLocalityCodePref(matchingZone.localityCode.value);
                       }}>
                       {zoneData
                         .sort((a, b) =>
