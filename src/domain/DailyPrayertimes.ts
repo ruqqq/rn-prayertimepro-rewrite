@@ -66,7 +66,6 @@ export function prayerIdOf(prayerIdInt: number): PrayerId {
     type: 'PrayerId',
     prayerId,
     value: prayerIdInt,
-    toString: () => PrayerIdEnum[prayerIdInt],
   };
 }
 

@@ -4,7 +4,6 @@ export type ValueType<
 > = {
   type: N;
   value: T;
-  toString(): string;
 };
 
 export function valueOf<

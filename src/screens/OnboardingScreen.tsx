@@ -158,11 +158,11 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
 };
 
 function zoneItemKey(zone: Zone.T) {
-  return `${zone.country}|${zone.state}|${zone.city}|${zone.code}`;
+  return `${zone.country.value}|${zone.state.value}|${zone.city.value}|${zone.code.value}`;
 }
 
 function zoneLabel(zone: Zone.T) {
-  return `${zone.city}, ${zone.state}`;
+  return `${zone.city.value}, ${zone.state.value}`;
 }
 
 export default OnboardingScreen;
