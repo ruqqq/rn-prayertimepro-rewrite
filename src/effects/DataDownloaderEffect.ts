@@ -24,6 +24,12 @@ export default function useDataDownloaderEffect(localityCode: LocalityCode) {
   if (hijrisDownloadDataState.state === 'downloaded') {
     downloadDataState = hijrisDownloadDataState;
   }
+  if (prayertimesDownloadDataState.state === 'idle') {
+    downloadDataState = prayertimesDownloadDataState;
+  }
+  if (hijrisDownloadDataState.state === 'idle') {
+    downloadDataState = hijrisDownloadDataState;
+  }
   if (prayertimesDownloadDataState.state === 'downloading') {
     downloadDataState = prayertimesDownloadDataState;
   }
