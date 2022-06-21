@@ -28,7 +28,7 @@ export function hijriDateOf(
     hijriDate,
     hijriMonth,
     hijriYear,
-    value: () => `${hijriDate}-${hijriMonth}-${hijriYear}`,
+    value: `${hijriDate}-${hijriMonth}-${hijriYear}`,
   };
 }
 

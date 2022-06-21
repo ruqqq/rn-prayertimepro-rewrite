@@ -4,7 +4,7 @@ export type ZoneCode = ValueType<'ZoneCode', string>;
 export function zoneCodeOf(code: string): ZoneCode {
   return {
     type: 'ZoneCode',
-    value: () => code,
+    value: code,
     toString: () => code,
   };
 }
@@ -13,7 +13,7 @@ type State = ValueType<'State', string>;
 export function stateOf(state: string): State {
   return {
     type: 'State',
-    value: () => state,
+    value: state,
     toString: () => state,
   };
 }
@@ -22,7 +22,7 @@ type City = ValueType<'City', string>;
 export function cityOf(city: string): City {
   return {
     type: 'City',
-    value: () => city,
+    value: city,
     toString: () => city,
   };
 }
@@ -31,7 +31,7 @@ type Country = ValueType<'Country', string>;
 export function countryOf(country: string): Country {
   return {
     type: 'Country',
-    value: () => country,
+    value: country,
     toString: () => country,
   };
 }
@@ -40,14 +40,14 @@ export function countryFromState(state: string): Country {
   if (state === 'Singapore') {
     return {
       type: 'Country',
-      value: () => 'SG',
+      value: 'SG',
       toString: () => 'SG',
     };
   }
 
   return {
     type: 'Country',
-    value: () => 'MY',
+    value: 'MY',
     toString: () => 'MY',
   };
 }
@@ -56,7 +56,7 @@ type LatLng = ValueType<'LatLng', number>;
 export function latLngOf(latLng: number): LatLng {
   return {
     type: 'LatLng',
-    value: () => latLng,
+    value: latLng,
     toString: () => `${latLng}`,
   };
 }
@@ -66,7 +66,7 @@ export function timezoneOf(timezone: string): Timezone {
   if (timezone === 'Asia/Singapore' || timezone === 'Asia/Kuala_Lumpur') {
     return {
       type: 'Timezone',
-      value: () => timezone,
+      value: timezone,
       toString: () => timezone,
     };
   }

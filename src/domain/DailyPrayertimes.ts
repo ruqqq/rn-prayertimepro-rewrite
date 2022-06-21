@@ -27,7 +27,7 @@ export function dateOnlyOf(
   return {
     type: 'DateOnly',
     date,
-    value: () => formatISO(date),
+    value: formatISO(date),
   };
 }
 
@@ -42,7 +42,7 @@ export function dateOnlyFromStr(dateStr: string): DateOnly {
   return {
     type: 'DateOnly',
     date,
-    value: () => formatISO(date),
+    value: formatISO(date),
   };
 }
 
@@ -65,7 +65,7 @@ export function prayerIdOf(prayerIdInt: number): PrayerId {
   return {
     type: 'PrayerId',
     prayerId,
-    value: () => prayerIdInt,
+    value: prayerIdInt,
     toString: () => PrayerIdEnum[prayerIdInt],
   };
 }
@@ -80,7 +80,7 @@ export function dateTimeOf(dateStr: string): DateTime {
   return {
     type: 'DateTime',
     date,
-    value: () => formatISO(date),
+    value: formatISO(date),
   };
 }
 
@@ -88,7 +88,7 @@ export type SourceId = ValueType<'SourceId', number>;
 export function sourceIdOf(sourceId: number): SourceId {
   return {
     type: 'SourceId',
-    value: () => sourceId,
+    value: sourceId,
   };
 }
 
@@ -101,16 +101,16 @@ export function localityCodeOf(localityCode: string): LocalityCode {
     type: 'LocalityCode',
     countryCode: localityCode.split('-')[0],
     locality: localityCode.split('-')[1],
-    value: () => localityCode,
+    value: localityCode,
   };
 }
 
 export function localityCodeFrom(zone: Zone.T): LocalityCode {
   return {
     type: 'LocalityCode',
-    countryCode: zone.country.value(),
-    locality: zone.code.value(),
-    value: () => `${zone.country.value()}-${zone.code.value()}`,
+    countryCode: zone.country.value,
+    locality: zone.code.value,
+    value: `${zone.country.value}-${zone.code.value}`,
   };
 }
 

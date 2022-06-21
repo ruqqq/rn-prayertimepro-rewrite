@@ -3,7 +3,7 @@ export type ValueType<
   T extends string | number | undefined,
 > = {
   type: N;
-  value(): T;
+  value: T;
   toString(): string;
 };
 
@@ -11,5 +11,5 @@ export function valueOf<
   N extends string,
   T extends string | number | undefined,
 >(value: ValueType<N, T>): T {
-  return value.value();
+  return value.value;
 }
