@@ -5,6 +5,7 @@ import Onboarding from 'react-native-onboarding-swiper';
 import Button from 'react-native-ui-lib/button';
 import { useSystemPreferenceEffect } from '../effects/PreferenceEffect';
 import OnboardingDownloadPage from './onboarding/OnboardingDownloadPage';
+import OnboardingPermissionsPage from './onboarding/OnboardingPermissionsPage';
 
 type OnboardingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -47,7 +48,12 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             image: <></>,
             title: 'Permissions',
             subtitle: (
-              <Button label="Grant Permission" disabled={completedSteps[0]} />
+              <OnboardingPermissionsPage
+                completedSteps={completedSteps}
+                markStepAsCompleted={() =>
+                  setCompletedSteps({ ...completedSteps, 1: true })
+                }
+              />
             ),
           },
           {

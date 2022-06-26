@@ -8,7 +8,7 @@ module.exports = {
     '\\.(jpg|jpeg|png)$': 'identity-obj-proxy',
   },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!(@react-native|react-native|react-native-vector-icons|react-native-onboarding-swiper|react-native-ui-lib|react-native-reanimated|react-native-gesture-handler)/).*/',
+    '<rootDir>/node_modules/(?!(@react-native|react-native|react-native-vector-icons|react-native-onboarding-swiper|react-native-ui-lib|react-native-reanimated|react-native-gesture-handler|react-native-permissions)/).*/',
   ],
   reporters: [
     'default',
