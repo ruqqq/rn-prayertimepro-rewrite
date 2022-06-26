@@ -6,6 +6,8 @@ platform :ios, '12.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'PrayerTimePro' do
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
   use_expo_modules!
   post_integrate do |installer|
     begin
@@ -47,6 +49,10 @@ target 'PrayerTimePro' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+  pod 'Permission-PhotoLibraryAddOnly', :path => "#{permissions_path}/PhotoLibraryAddOnly"
+  pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
 
   target 'PrayerTimeProTests' do
     inherit! :complete

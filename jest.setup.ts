@@ -15,3 +15,7 @@ jest.mock('react-native-reanimated', () => {
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 
 jest.mock('react-native-vector-icons');
+
+jest.mock('react-native-permissions', () =>
+  require('react-native-permissions/mock'),
+);

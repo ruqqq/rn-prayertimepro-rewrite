@@ -35,8 +35,16 @@
 			</dict>
 		</dict>
 	</dict>
+  <key>NSCalendarsUsageDescription</key>
+	<string>API provided by one of the libraries but not used in PrayerTime Pro itself.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>API provided by one of the libraries but not used in PrayerTime Pro itself.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>PrayerTime Pro uses your current location to determine the correct qibla direction.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>API provided by one of the libraries but not used in PrayerTime Pro itself.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>PrayerTime Pro saves image of today's prayer times to Camera Roll on user's request.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
