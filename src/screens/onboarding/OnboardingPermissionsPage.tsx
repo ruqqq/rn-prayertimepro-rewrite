@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Button from 'react-native-ui-lib/button';
+import Text from 'react-native-ui-lib/text';
 import { useCustomEffect } from '../../effects/CustomEffect';
 import {
   PERMISSIONS,
@@ -12,10 +13,9 @@ type Props = {
 };
 
 const OnboardingPermissionsPage: React.FC<Props> = ({
+  markStepAsCompleted,
   completedSteps,
-  markStepAsCompleted: markStepAsCompletedInput,
 }) => {
-  const { current: markStepAsCompleted } = useRef(markStepAsCompletedInput);
   const [permissionsGranted, setPermissionsGranted] = useState(false);
   const { permissionsStatus, requestPermissions } = usePermissionsEffect([
     PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
@@ -26,19 +26,32 @@ const OnboardingPermissionsPage: React.FC<Props> = ({
 
   useCustomEffect(() => {
     const allPermissionsGranted = Object.values(permissionsStatus).every(
-      s => s,
+      s => s === 'granted',
     );
-    if (allPermissionsGranted) {
-      setPermissionsGranted(true);
+    setPermissionsGranted(allPermissionsGranted);
+    if (allPermissionsGranted && !permissionsGranted && !completedSteps[1]) {
       markStepAsCompleted();
     }
-  }, [markStepAsCompleted, permissionsStatus]);
+  }, [
+    markStepAsCompleted,
+    permissionsGranted,
+    permissionsStatus,
+    completedSteps[1],
+  ]);
 
   return (
     <>
+      <Text>
+        PreyerTime Pro requires these permissions to be granted to work
+        correctly:
+      </Text>
+      <Text>1. Access to external storage</Text>
+      <Text>2. Access to location for qibla function to work</Text>
+      <Text>3. Access to send notifications to alert for prayer times</Text>
       <Button
-        label="Grant Permission"
-        disabled={completedSteps[1] || permissionsGranted}
+        marginT-24
+        label={permissionsGranted ? 'Permissions Granted!' : 'Grant Permission'}
+        disabled={permissionsGranted}
         onPress={requestPermissions}
       />
     </>

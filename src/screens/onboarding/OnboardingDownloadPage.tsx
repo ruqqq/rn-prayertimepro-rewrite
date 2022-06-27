@@ -12,12 +12,17 @@ import {
 import useDataDownloaderEffect from '../../effects/DataDownloaderEffect';
 import { usePreferenceEffect } from '../../effects/PreferenceEffect';
 import { useZonesDataEffect } from '../../effects/ZonesDataEffect';
+import { useCustomEffect } from '../../effects/CustomEffect';
 
 type Props = {
   markStepAsCompleted: () => void;
+  completedSteps: Record<number, boolean>;
 };
 
-const OnboardingDownloadPage: React.FC<Props> = () => {
+const OnboardingDownloadPage: React.FC<Props> = ({
+  markStepAsCompleted,
+  completedSteps,
+}) => {
   const {
     data: zoneData,
     hasData: hasZoneData,
@@ -50,6 +55,12 @@ const OnboardingDownloadPage: React.FC<Props> = () => {
     )[0];
     setSelectedZone(matchingZone);
   }, [localityCityPref, localityCodePref, zoneData, selectedZone]);
+
+  useCustomEffect(() => {
+    if (!completedSteps[0] && downloadDataState.state === 'downloaded') {
+      markStepAsCompleted();
+    }
+  }, [markStepAsCompleted, downloadDataState.state, completedSteps[0]]);
 
   return (
     <View>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation-types';
 import Onboarding from 'react-native-onboarding-swiper';
@@ -13,6 +13,7 @@ type OnboardingScreenProps = NativeStackScreenProps<
 >;
 const OnboardingScreen = (props: OnboardingScreenProps) => {
   const { navigation } = props;
+  const onboardingRef = useRef<Onboarding>(null);
   const [completedSteps, setCompletedSteps] = useState({
     0: false,
     1: false,
@@ -21,6 +22,16 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
   const [, setOnboardingCompleted] = useSystemPreferenceEffect(
     'onboarding_completed',
   );
+  const completeStep = useCallback(
+    (stepIndex: number) => {
+      setCompletedSteps({ ...completedSteps, [stepIndex]: true });
+      onboardingRef?.current?.goNext();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(completedSteps)],
+  );
+  const completeStep1 = useCallback(() => completeStep(0), [completeStep]);
+  const completeStep2 = useCallback(() => completeStep(1), [completeStep]);
 
   async function onDone(): Promise<void> {
     setOnboardingCompleted(true);
@@ -30,6 +41,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
   return (
     <>
       <Onboarding
+        ref={onboardingRef}
         pages={[
           {
             backgroundColor: '#fff',
@@ -37,22 +49,19 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             title: 'Salam!',
             subtitle: (
               <OnboardingDownloadPage
-                markStepAsCompleted={() =>
-                  setCompletedSteps({ ...completedSteps, 0: true })
-                }
+                completedSteps={completedSteps}
+                markStepAsCompleted={completeStep1}
               />
             ),
           },
           {
             backgroundColor: '#fff',
             image: <></>,
-            title: 'Permissions',
+            title: 'One more thing',
             subtitle: (
               <OnboardingPermissionsPage
                 completedSteps={completedSteps}
-                markStepAsCompleted={() =>
-                  setCompletedSteps({ ...completedSteps, 1: true })
-                }
+                markStepAsCompleted={completeStep2}
               />
             ),
           },
@@ -63,7 +72,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             subtitle: (
               <Button
                 label="Proceed"
-                disabled={completedSteps[0] && completedSteps[1]}
+                disabled={!completedSteps[0] || !completedSteps[1]}
                 onPress={onDone}
               />
             ),
