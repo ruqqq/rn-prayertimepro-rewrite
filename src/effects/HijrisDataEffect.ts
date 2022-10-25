@@ -39,6 +39,7 @@ export function useHijrisDataEffect(localityCode: LocalityCode, year?: number) {
         setDownloadDataState({ state: 'downloaded' });
         loadData();
       } catch (e) {
+        console.error(e);
         setDownloadDataState({ state: 'error', error: e as Error });
       }
     }

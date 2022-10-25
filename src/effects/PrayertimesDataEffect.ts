@@ -51,6 +51,7 @@ export function usePrayertimesDataEffect(
         setDownloadDataState({ state: 'downloaded' });
         loadData();
       } catch (e) {
+        console.error(e);
         setDownloadDataState({ state: 'error', error: e as Error });
       }
     }

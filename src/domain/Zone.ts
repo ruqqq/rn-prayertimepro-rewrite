@@ -55,9 +55,16 @@ export function latLngOf(latLng: number): LatLng {
   };
 }
 
-type Timezone = ValueType<'Timezone', 'Asia/Singapore' | 'Asia/Kuala_Lumpur'>;
+type Timezone = ValueType<
+  'Timezone',
+  'Asia/Singapore' | 'Asia/Kuala_Lumpur' | 'Asia/Jakarta'
+>;
 export function timezoneOf(timezone: string): Timezone {
-  if (timezone === 'Asia/Singapore' || timezone === 'Asia/Kuala_Lumpur') {
+  if (
+    timezone === 'Asia/Singapore' ||
+    timezone === 'Asia/Kuala_Lumpur' ||
+    timezone === 'Asia/Jakarta'
+  ) {
     return {
       type: 'Timezone',
       value: timezone,
