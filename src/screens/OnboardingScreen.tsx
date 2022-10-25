@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation-types';
 import Onboarding from 'react-native-onboarding-swiper';
 import Button from 'react-native-ui-lib/button';
+import { Colors } from 'react-native-ui-lib';
 import { useSystemPreferenceEffect } from '../effects/PreferenceEffect';
 import OnboardingDownloadPage from './onboarding/OnboardingDownloadPage';
 import OnboardingPermissionsPage from './onboarding/OnboardingPermissionsPage';
@@ -44,7 +45,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
         ref={onboardingRef}
         pages={[
           {
-            backgroundColor: '#fff',
+            backgroundColor: Colors.white,
             image: <></>,
             title: 'Salam!',
             subtitle: (
@@ -55,7 +56,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             ),
           },
           {
-            backgroundColor: '#fff',
+            backgroundColor: Colors.white,
             image: <></>,
             title: 'One more thing',
             subtitle: (
@@ -66,7 +67,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             ),
           },
           {
-            backgroundColor: '#fff',
+            backgroundColor: Colors.white,
             image: <></>,
             title: "You're all set!",
             subtitle: (

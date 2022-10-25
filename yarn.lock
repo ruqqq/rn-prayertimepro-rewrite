@@ -8217,7 +8217,7 @@ react-native-text-size@4.0.0-rc.1:
   resolved "https://registry.yarnpkg.com/react-native-text-size/-/react-native-text-size-4.0.0-rc.1.tgz#1e048d345dd6a5a8e1269e0585c1a5948c478da5"
   integrity sha512-CysqjU2jK6Yc+a+kEI222pUyTY2ywcU2HqbFqf1KHymW6OPTdvBBHqbEJKL0QiLhQaFYDbqicM+h990s9TP00g==
 
-react-native-ui-lib@^6.17.1:
+react-native-ui-lib@6.17.1:
   version "6.17.1"
   resolved "https://registry.yarnpkg.com/react-native-ui-lib/-/react-native-ui-lib-6.17.1.tgz#8c8afbae1e76ae73e46e2364ea64da6c9ff86e01"
   integrity sha512-yzVdgSo0gGZNH3qdRz0p1WxPSHilWhtlm2/BQg4jD5mE/u/aNY6xDhj3js3Mr3z0Jwra9fmZcxINzJhopBGGUw==
