@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import { waitFor } from '@testing-library/react-native';
 import { resetAllWhenMocks, verifyAllWhenMocksCalled, when } from 'jest-when';
 import PrayertimesAPI from '../api/PrayertimesAPI';
@@ -70,10 +70,7 @@ describe('PrayertimesDataEffect', () => {
       .calledWith(localityCode, expect.anything())
       .mockResolvedValueOnce(prayertimes);
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      usePrayertimesDataEffect(localityCode),
-    );
-    await waitForNextUpdate();
+    const { result } = renderHook(() => usePrayertimesDataEffect(localityCode));
 
     await waitFor(() => {
       expect(result.current.hasData).toBeTruthy();
@@ -89,6 +86,12 @@ describe('PrayertimesDataEffect', () => {
   });
 
   it('should set downloadDataState to downloading when downloadData is called', async () => {
+    when(PrayertimesAPI.getTimesForYear)
+      .calledWith('SG', '1', 2022)
+      .mockReturnValueOnce(
+        new Promise(r => setTimeout(() => r([[dto]]), 1000)),
+      );
+
     const { result } = renderMyHook();
     result.current.downloadData();
 
@@ -183,13 +186,12 @@ describe('PrayertimesDataEffect', () => {
         DailyPrayertimes.fromDto({ ...dto, localityCode: 'MY-JHR01' }),
       );
 
-    const { result, rerender, waitForNextUpdate } = renderHook(() =>
+    const { result, rerender } = renderHook(() =>
       usePrayertimesDataEffect(myLocalityCode, date),
     );
-    await waitForNextUpdate();
+    await waitFor(() => expect(result.current.hasData).toBeTruthy());
     myLocalityCode = localityCodeJHR01;
-    rerender();
-    await waitForNextUpdate();
+    rerender({});
 
     await waitFor(() => {
       expect(result.current.hasData).toBeTruthy();

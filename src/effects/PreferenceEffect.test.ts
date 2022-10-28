@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import { waitFor } from '@testing-library/react-native';
 import add from 'date-fns/add';
 import { resetAllWhenMocks, verifyAllWhenMocksCalled, when } from 'jest-when';

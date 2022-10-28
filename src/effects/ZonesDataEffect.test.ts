@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import { waitFor } from '@testing-library/react-native';
 import { resetAllWhenMocks, verifyAllWhenMocksCalled, when } from 'jest-when';
 import PrayertimesAPI from '../api/PrayertimesAPI';
@@ -44,6 +44,29 @@ describe('ZonesDataEffect', () => {
   });
 
   it('should set downloadDataState to downloading when downloadData is called', async () => {
+    const dto = {
+      code: '1',
+      state: 'Singapore',
+      city: 'Singapore',
+      lat: 1.0,
+      lng: 0.1,
+      timezone: 'Asia/Singapore',
+    };
+
+    when(PrayertimesAPI.getZones)
+      .calledWith()
+      .mockReturnValueOnce(
+        new Promise(r =>
+          setTimeout(
+            () =>
+              r({
+                Singapore: [dto],
+              }),
+            1000,
+          ),
+        ),
+      );
+
     const { result } = renderMyHook();
     result.current.downloadData();
 

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import { waitFor } from '@testing-library/react-native';
 import { resetAllWhenMocks, verifyAllWhenMocksCalled, when } from 'jest-when';
 import PrayertimesAPI from '../api/PrayertimesAPI';
@@ -9,6 +9,7 @@ import { localityCodeOf } from '../domain/DailyPrayertimes';
 
 jest.mock('../repositories/HijrisRepository');
 jest.mock('../api/PrayertimesAPI');
+
 describe('HijrisDataEffect', () => {
   const localityCode = localityCodeOf('SG-1');
   const year = 2022;
@@ -57,10 +58,7 @@ describe('HijrisDataEffect', () => {
       .calledWith(localityCode, year)
       .mockResolvedValueOnce(hijris);
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useHijrisDataEffect(localityCode),
-    );
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useHijrisDataEffect(localityCode));
 
     await waitFor(() => {
       expect(result.current.hasData).toBeTruthy();
@@ -74,6 +72,12 @@ describe('HijrisDataEffect', () => {
   });
 
   it('should set downloadDataState to downloading when downloadData is called', async () => {
+    when(PrayertimesAPI.getHijrisForYear)
+      .calledWith('SG', '1', year)
+      .mockReturnValueOnce(
+        new Promise(r => setTimeout(() => r([[dto]]), 1000)),
+      );
+
     const { result } = renderMyHook();
     result.current.downloadData();
 
@@ -167,13 +171,12 @@ describe('HijrisDataEffect', () => {
         Hijri.fromDto({ ...dto, localityCode: 'MY-JHR01' }),
       ]);
 
-    const { result, rerender, waitForNextUpdate } = renderHook(() =>
+    const { result, rerender } = renderHook(() =>
       useHijrisDataEffect(myLocalityCode, year),
     );
-    await waitForNextUpdate();
+    await waitFor(() => expect(result.current.hasData).toBeTruthy());
     myLocalityCode = localityCodeJHR01;
-    rerender();
-    await waitForNextUpdate();
+    rerender({});
 
     await waitFor(() => {
       expect(result.current.hasData).toBeTruthy();
