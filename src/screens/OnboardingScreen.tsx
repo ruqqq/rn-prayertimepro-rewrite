@@ -2,11 +2,10 @@ import React, { useCallback, useRef, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation-types';
 import Onboarding from 'react-native-onboarding-swiper';
-import Button from 'react-native-ui-lib/button';
-import { Colors } from 'react-native-ui-lib';
 import { useSystemPreferenceEffect } from '../effects/PreferenceEffect';
 import OnboardingDownloadPage from './onboarding/OnboardingDownloadPage';
 import OnboardingPermissionsPage from './onboarding/OnboardingPermissionsPage';
+import { Button, useTheme } from 'react-native-paper';
 
 type OnboardingScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -14,6 +13,7 @@ type OnboardingScreenProps = NativeStackScreenProps<
 >;
 const OnboardingScreen = (props: OnboardingScreenProps) => {
   const { navigation } = props;
+  const theme = useTheme();
   const onboardingRef = useRef<Onboarding>(null);
   const [completedSteps, setCompletedSteps] = useState({
     0: false,
@@ -45,7 +45,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
         ref={onboardingRef}
         pages={[
           {
-            backgroundColor: Colors.white,
+            backgroundColor: theme.colors.background,
             image: <></>,
             title: 'Salam!',
             subtitle: (
@@ -56,7 +56,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             ),
           },
           {
-            backgroundColor: Colors.white,
+            backgroundColor: theme.colors.background,
             image: <></>,
             title: 'One more thing',
             subtitle: (
@@ -67,15 +67,15 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             ),
           },
           {
-            backgroundColor: Colors.white,
+            backgroundColor: theme.colors.background,
             image: <></>,
             title: "You're all set!",
             subtitle: (
               <Button
-                label="Proceed"
                 disabled={!completedSteps[0] || !completedSteps[1]}
-                onPress={onDone}
-              />
+                onPress={onDone}>
+                Proceed
+              </Button>
             ),
           },
         ]}

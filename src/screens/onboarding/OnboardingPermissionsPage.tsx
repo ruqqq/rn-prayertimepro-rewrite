@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Button from 'react-native-ui-lib/button';
-import Text from 'react-native-ui-lib/text';
+import { Button, Text } from 'react-native-paper';
 import { useCustomEffect } from '../../effects/CustomEffect';
 import {
   PERMISSIONS,
@@ -48,12 +47,9 @@ const OnboardingPermissionsPage: React.FC<Props> = ({
       <Text>1. Access to external storage</Text>
       <Text>2. Access to location for qibla function to work</Text>
       <Text>3. Access to send notifications to alert for prayer times</Text>
-      <Button
-        marginT-24
-        label={permissionsGranted ? 'Permissions Granted!' : 'Grant Permission'}
-        disabled={permissionsGranted}
-        onPress={requestPermissions}
-      />
+      <Button disabled={permissionsGranted} onPress={requestPermissions}>
+        {permissionsGranted ? 'Permissions Granted!' : 'Grant Permission'}
+      </Button>
     </>
   );
 };

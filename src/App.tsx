@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Provider as PaperProvider } from 'react-native-paper';
 import Navigation from './Navigation';
 import useAppInitEffect from './useAppInitEffect';
 
@@ -9,11 +10,13 @@ const AppContainer = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {isReady ? (
-        <NavigationContainer>
-          <Navigation initialRouteName={initialRouteName} />
-        </NavigationContainer>
-      ) : null}
+      <PaperProvider>
+        {isReady ? (
+          <NavigationContainer>
+            <Navigation initialRouteName={initialRouteName} />
+          </NavigationContainer>
+        ) : null}
+      </PaperProvider>
     </GestureHandlerRootView>
   );
 };

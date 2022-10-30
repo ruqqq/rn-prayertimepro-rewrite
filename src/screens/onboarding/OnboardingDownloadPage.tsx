@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import * as Zone from '../../domain/Zone';
-import Picker from 'react-native-ui-lib/picker';
-import Text from 'react-native-ui-lib/text';
-import View from 'react-native-ui-lib/view';
-import Button from 'react-native-ui-lib/button';
+import { Button, Text } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   localityCodeFrom,
@@ -64,62 +62,55 @@ const OnboardingDownloadPage: React.FC<Props> = ({
 
   return (
     <View>
-      <Text center={true} grey10>
+      <Text style={{ textAlign: 'center' }}>
         Thank you for downloading PrayerTime Pro.
       </Text>
-      <Text center={true} grey10>
+      <Text style={{ textAlign: 'center' }}>
         To get started, select your location/area and touch the Download button.
       </Text>
-      <View margin-12 marginT-24>
-        {hasZoneData ? (
-          <Picker
-            migrateTextField
-            autoCorrect={false}
-            topBarProps={{ title: 'Select Location' }}
-            placeholder="Select location"
-            showSearch={true}
-            trailingAccessory={
-              <MaterialCommunityIcons name="chevron-down" size={24} />
-            }
-            editable={hasZoneData}
-            value={selectedZone ? zoneItemKey(selectedZone) : undefined}
-            onChange={(item: { label: string; value: string }) => {
-              const matchingZone = zoneData.filter(
-                zone => zoneItemKey(zone) === item.value,
-              )[0];
+      <View style={{ margin: 12, marginTop: 24 }}>
+        {/* {hasZoneData ? ( */}
+        {/*   <Picker */}
+        {/*     migrateTextField */}
+        {/*     autoCorrect={false} */}
+        {/*     topBarProps={{ title: 'Select Location' }} */}
+        {/*     placeholder="Select location" */}
+        {/*     showSearch={true} */}
+        {/*     trailingAccessory={ */}
+        {/*       <MaterialCommunityIcons name="chevron-down" size={24} /> */}
+        {/*     } */}
+        {/*     editable={hasZoneData} */}
+        {/*     value={selectedZone ? zoneItemKey(selectedZone) : undefined} */}
+        {/*     onChange={(item: { label: string; value: string }) => { */}
+        {/*       const matchingZone = zoneData.filter( */}
+        {/*         zone => zoneItemKey(zone) === item.value, */}
+        {/*       )[0]; */}
 
-              setSelectedZone(matchingZone);
-              setLocalityCityPref(matchingZone.city.value);
-              setLocalityCodePref(matchingZone.localityCode.value);
-            }}>
-            {zoneData
-              .sort((a, b) =>
-                `${a.city}, ${a.state}`.localeCompare(`${b.city}, ${b.state}`),
-              )
-              .map(item => (
-                <Picker.Item
-                  key={zoneItemKey(item)}
-                  value={zoneItemKey(item)}
-                  label={zoneLabel(item)}
-                />
-              ))}
-          </Picker>
-        ) : (
-          <Picker
-            key="Loading Picker"
-            migrateTextField
-            placeholder="Loading..."
-            editable={false}
-          />
-        )}
+        {/*       setSelectedZone(matchingZone); */}
+        {/*       setLocalityCityPref(matchingZone.city.value); */}
+        {/*       setLocalityCodePref(matchingZone.localityCode.value); */}
+        {/*     }}> */}
+        {/*     {zoneData */}
+        {/*       .sort((a, b) => */}
+        {/*         `${a.city}, ${a.state}`.localeCompare(`${b.city}, ${b.state}`), */}
+        {/*       ) */}
+        {/*       .map(item => ( */}
+        {/*         <Picker.Item */}
+        {/*           key={zoneItemKey(item)} */}
+        {/*           value={zoneItemKey(item)} */}
+        {/*           label={zoneLabel(item)} */}
+        {/*         /> */}
+        {/*       ))} */}
+        {/*   </Picker> */}
+        {/* ) : ( */}
+        {/*   <Picker */}
+        {/*     key="Loading Picker" */}
+        {/*     migrateTextField */}
+        {/*     placeholder="Loading..." */}
+        {/*     editable={false} */}
+        {/*   /> */}
+        {/* )} */}
         <Button
-          label={
-            hasData
-              ? 'Downloaded!'
-              : downloadDataState.state === 'downloading'
-              ? 'Downloading...'
-              : 'Download'
-          }
           disabled={
             !hasZoneData ||
             !selectedZone ||
@@ -128,17 +119,22 @@ const OnboardingDownloadPage: React.FC<Props> = ({
               state => state === downloadDataState.state,
             )
           }
-          onPress={downloadData}
-        />
+          onPress={downloadData}>
+          {hasData
+            ? 'Downloaded!'
+            : downloadDataState.state === 'downloading'
+            ? 'Downloading...'
+            : 'Download'}
+        </Button>
 
         {downloadDataState.state === 'error' ? (
-          <Text center={true} marginT-10 red10>
+          <Text style={{ textAlign: 'center', marginTop: 10, color: 'red' }}>
             <MaterialCommunityIcons name="alert-circle" size={18} /> Unable to
             download data. Please try again later.
           </Text>
         ) : undefined}
 
-        <Text center={true} marginT-10 grey30>
+        <Text style={{ textAlign: 'center', marginTop: 10, color: 'grey' }}>
           (This will require your device to have access to mobile data/WiFi)
         </Text>
       </View>
