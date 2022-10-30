@@ -47,7 +47,11 @@ const OnboardingPermissionsPage: React.FC<Props> = ({
       <Text>1. Access to external storage</Text>
       <Text>2. Access to location for qibla function to work</Text>
       <Text>3. Access to send notifications to alert for prayer times</Text>
-      <Button disabled={permissionsGranted} onPress={requestPermissions}>
+      <Button
+        mode="contained-tonal"
+        disabled={permissionsGranted}
+        onPress={requestPermissions}
+        style={{ marginTop: 24 }}>
         {permissionsGranted ? 'Permissions Granted!' : 'Grant Permission'}
       </Button>
     </>

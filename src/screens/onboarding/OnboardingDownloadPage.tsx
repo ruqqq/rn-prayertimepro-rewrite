@@ -111,6 +111,7 @@ const OnboardingDownloadPage: React.FC<Props> = ({
         {/*   /> */}
         {/* )} */}
         <Button
+          mode="contained-tonal"
           disabled={
             !hasZoneData ||
             !selectedZone ||

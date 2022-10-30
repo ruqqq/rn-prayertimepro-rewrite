@@ -72,6 +72,7 @@ const OnboardingScreen = (props: OnboardingScreenProps) => {
             title: "You're all set!",
             subtitle: (
               <Button
+                mode="contained-tonal"
                 disabled={!completedSteps[0] || !completedSteps[1]}
                 onPress={onDone}>
                 Proceed
