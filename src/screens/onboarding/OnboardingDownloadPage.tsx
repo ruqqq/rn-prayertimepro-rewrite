@@ -68,7 +68,21 @@ const OnboardingDownloadPage: React.FC<Props> = ({
       <Text style={{ textAlign: 'center' }}>
         To get started, select your location/area and touch the Download button.
       </Text>
-      <View style={{ margin: 12, marginTop: 24 }}>
+      <View style={{ margin: 12 }}>
+        <Button
+          mode="outlined"
+          icon="chevron-down"
+          loading={!hasZoneData}
+          disabled={!hasZoneData}
+          contentStyle={{ flexDirection: 'row-reverse' }}
+          style={{ marginTop: 24, marginBottom: 24 }}
+          onPress={() => {}}>
+          {selectedZone
+            ? zoneItemKey(selectedZone)
+            : hasZoneData
+            ? 'Select location'
+            : 'Loading...'}
+        </Button>
         {/* {hasZoneData ? ( */}
         {/*   <Picker */}
         {/*     migrateTextField */}
