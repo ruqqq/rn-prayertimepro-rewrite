@@ -11,6 +11,9 @@ import useDataDownloaderEffect from '../../effects/DataDownloaderEffect';
 import { usePreferenceEffect } from '../../effects/PreferenceEffect';
 import { useZonesDataEffect } from '../../effects/ZonesDataEffect';
 import { useCustomEffect } from '../../effects/CustomEffect';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../navigation-types';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type Props = {
   markStepAsCompleted: () => void;
@@ -34,6 +37,10 @@ const OnboardingDownloadPage: React.FC<Props> = ({
     usePreferenceEffect('locality_city');
   const [localityCodePref, setLocalityCodePref] =
     usePreferenceEffect('locality_code');
+  const navigation =
+    useNavigation<
+      NativeStackNavigationProp<RootStackParamList, 'Onboarding'>
+    >();
 
   useEffect(() => {
     if (hasZoneData === false) {
@@ -76,7 +83,7 @@ const OnboardingDownloadPage: React.FC<Props> = ({
           disabled={!hasZoneData}
           contentStyle={{ flexDirection: 'row-reverse' }}
           style={{ marginTop: 24, marginBottom: 24 }}
-          onPress={() => {}}>
+          onPress={() => navigation.navigate('LocationPicker')}>
           {selectedZone
             ? zoneItemKey(selectedZone)
             : hasZoneData
