@@ -33,6 +33,17 @@ export function countryOf(country: string): Country {
   };
 }
 
+export function countryString(country: Country): string {
+  switch (country.value) {
+    case 'SG':
+      return 'Singapore';
+    case 'MY':
+      return 'Malaysia';
+    default:
+      return country.value;
+  }
+}
+
 export function countryFromState(state: string): Country {
   if (state === 'Singapore') {
     return {

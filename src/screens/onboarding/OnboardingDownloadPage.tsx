@@ -14,6 +14,7 @@ import { useCustomEffect } from '../../effects/CustomEffect';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation-types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { LocationPickerEventEmitter } from '../LocationPickerScreen';
 
 type Props = {
   markStepAsCompleted: () => void;
@@ -67,6 +68,17 @@ const OnboardingDownloadPage: React.FC<Props> = ({
     }
   }, [markStepAsCompleted, downloadDataState.state, completedSteps[0]]);
 
+  useEffect(() => {
+    const subscription = LocationPickerEventEmitter.addListener(
+      'onZoneSelected',
+      (item: Zone.T) => {
+        setSelectedZone(item);
+      },
+    );
+
+    return () => subscription.remove();
+  }, [setSelectedZone]);
+
   return (
     <View>
       <Text style={{ textAlign: 'center' }}>
@@ -85,7 +97,7 @@ const OnboardingDownloadPage: React.FC<Props> = ({
           style={{ marginTop: 24, marginBottom: 24 }}
           onPress={() => navigation.navigate('LocationPicker')}>
           {selectedZone
-            ? zoneItemKey(selectedZone)
+            ? zoneLabel(selectedZone)
             : hasZoneData
             ? 'Select location'
             : 'Loading...'}

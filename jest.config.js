@@ -1,6 +1,7 @@
 module.exports = {
   preset: 'react-native',
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+  watchPathIgnorePatterns: ['/node_modules/', '/html-report/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   setupFiles: ['<rootDir>/jest.setup.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup-after-env.ts'],
