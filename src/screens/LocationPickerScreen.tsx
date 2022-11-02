@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { DeviceEventEmitter, ListRenderItem, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { List, Searchbar } from 'react-native-paper';
 import { RootStackParamList } from '../navigation-types';
 import * as Zone from '../domain/Zone';
 import { useZonesDataEffect } from '../effects/ZonesDataEffect';
-import { useNavigation } from '@react-navigation/native';
 
 export const LocationPickerEventEmitter = DeviceEventEmitter;
 
-// type LocationPickerScreenProps = NativeStackScreenProps<
-//   RootStackParamList,
-//   'LocationPicker'
-// >;
+type LocationPickerScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'LocationPicker'
+>;
 
-const LocationPickerScreen = () => {
-  const navigation =
-    useNavigation<
-      NativeStackNavigationProp<RootStackParamList, 'LocationPicker'>
-    >();
-  useEffect(() => {
-    navigation.setOptions({ title: 'Select Location' });
-  }, [navigation]);
+const LocationPickerScreen: React.FC<LocationPickerScreenProps> = ({
+  navigation,
+  route,
+}) => {
+  const selectedZone: Zone.T | undefined = route.params.selectedZone;
+  navigation.setOptions({ title: 'Select Location' });
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data } = useZonesDataEffect();
@@ -55,6 +52,11 @@ const LocationPickerScreen = () => {
       <List.Item
         title={item.city.value}
         description={`${item.state.value}, ${item.country.value}`}
+        right={
+          selectedZone && keyExtractor(item) === keyExtractor(selectedZone)
+            ? () => <List.Icon icon="check" />
+            : undefined
+        }
         onPress={onPress}
       />
     );

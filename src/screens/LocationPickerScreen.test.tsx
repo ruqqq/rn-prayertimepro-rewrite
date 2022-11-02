@@ -4,17 +4,18 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from '@testing-library/react-native';
 import LocationPickerScreen, {
   LocationPickerEventEmitter,
 } from './LocationPickerScreen';
 import * as Zone from '../domain/Zone';
 import { useZonesDataEffect } from '../effects/ZonesDataEffect';
-import { useNavigation } from '@react-navigation/native';
 import { EmitterSubscription } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation-types';
+import { RouteProp } from '@react-navigation/native';
 
-jest.mock('@react-navigation/native');
-const mockedUseNavigation = jest.mocked(useNavigation);
 jest.mock('../effects/ZonesDataEffect');
 const mockedUseZonesDataEffect = jest.mocked(useZonesDataEffect);
 
@@ -37,14 +38,22 @@ describe('LocationPickerScreen', () => {
       timezone: 'Asia/Singapore',
     }),
   ];
-  const navigation = {
+  const navigation: NativeStackNavigationProp<
+    RootStackParamList,
+    'LocationPicker'
+  > = {
     setOptions: jest.fn(),
     pop: jest.fn(),
+    getParams: jest.fn(),
+  } as any;
+
+  const route: RouteProp<RootStackParamList, 'LocationPicker'> = {
+    key: '',
+    name: 'LocationPicker',
+    params: {},
   };
 
-  beforeEach(() => {
-    mockedUseNavigation.mockReturnValue(navigation);
-  });
+  beforeEach(() => {});
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -59,12 +68,49 @@ describe('LocationPickerScreen', () => {
         state: 'idle',
       },
     });
-    render(<LocationPickerScreen />);
+    render(<LocationPickerScreen navigation={navigation} route={route} />);
 
     expect(screen.getByText('Johor Bahru')).not.toBeNull();
     expect(screen.getByText('Johor, MY')).not.toBeNull();
     expect(screen.getByText('city')).not.toBeNull();
     expect(screen.getByText('Singapore, SG')).not.toBeNull();
+  });
+
+  it('should show no indicators', async () => {
+    mockedUseZonesDataEffect.mockReturnValue({
+      data: zones,
+      hasData: true,
+      downloadData: () => {},
+      downloadDataState: {
+        state: 'idle',
+      },
+    });
+    render(<LocationPickerScreen navigation={navigation} route={route} />);
+
+    expect(screen.queryByText(/󰄬/)).toBeNull();
+  });
+
+  it('should show indicator for existing selected item', async () => {
+    mockedUseZonesDataEffect.mockReturnValue({
+      data: zones,
+      hasData: true,
+      downloadData: () => {},
+      downloadDataState: {
+        state: 'idle',
+      },
+    });
+    render(
+      <LocationPickerScreen
+        navigation={navigation}
+        route={{ ...route, params: { selectedZone: zones[0] } }}
+      />,
+    );
+
+    expect(
+      within(
+        screen.getByText('Johor Bahru').parent?.parent?.parent?.parent!,
+      ).getByText(/󰄬/),
+    ).not.toBeNull();
   });
 
   it('should render filter items when there is input in search box (case-insensitive)', async () => {
@@ -76,7 +122,7 @@ describe('LocationPickerScreen', () => {
         state: 'idle',
       },
     });
-    render(<LocationPickerScreen />);
+    render(<LocationPickerScreen navigation={navigation} route={route} />);
     await waitFor(() => expect(screen.getByText('city')).not.toBeNull());
 
     screen
@@ -115,7 +161,7 @@ describe('LocationPickerScreen', () => {
           state: 'idle',
         },
       });
-      render(<LocationPickerScreen />);
+      render(<LocationPickerScreen navigation={navigation} route={route} />);
 
       fireEvent.press(screen.getByText('city'));
 

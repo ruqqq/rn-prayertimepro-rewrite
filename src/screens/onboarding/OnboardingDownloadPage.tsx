@@ -30,7 +30,9 @@ const OnboardingDownloadPage: React.FC<Props> = ({
     hasData: hasZoneData,
     downloadData: downloadZoneData,
   } = useZonesDataEffect();
-  const [selectedZone, setSelectedZone] = useState<Zone.T | null>(null);
+  const [selectedZone, setSelectedZone] = useState<Zone.T | undefined>(
+    undefined,
+  );
   const { hasData, downloadData, downloadDataState } = useDataDownloaderEffect(
     selectedZone ? localityCodeFrom(selectedZone) : localityCodeOf('SG-1'),
   );
@@ -72,12 +74,14 @@ const OnboardingDownloadPage: React.FC<Props> = ({
     const subscription = LocationPickerEventEmitter.addListener(
       'onZoneSelected',
       (item: Zone.T) => {
+        setLocalityCityPref(item.city.value);
+        setLocalityCodePref(item.localityCode.value);
         setSelectedZone(item);
       },
     );
 
     return () => subscription.remove();
-  }, [setSelectedZone]);
+  }, [setSelectedZone, setLocalityCityPref, setLocalityCodePref]);
 
   return (
     <View>
@@ -95,7 +99,9 @@ const OnboardingDownloadPage: React.FC<Props> = ({
           disabled={!hasZoneData}
           contentStyle={{ flexDirection: 'row-reverse' }}
           style={{ marginTop: 24, marginBottom: 24 }}
-          onPress={() => navigation.navigate('LocationPicker')}>
+          onPress={() =>
+            navigation.navigate('LocationPicker', { selectedZone })
+          }>
           {selectedZone
             ? zoneLabel(selectedZone)
             : hasZoneData
