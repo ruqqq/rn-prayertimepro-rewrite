@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { DeviceEventEmitter, ListRenderItem, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
@@ -19,7 +19,10 @@ const LocationPickerScreen: React.FC<LocationPickerScreenProps> = ({
   route,
 }) => {
   const selectedZone: Zone.T | undefined = route.params.selectedZone;
-  navigation.setOptions({ title: 'Select Location' });
+  useEffect(
+    () => navigation.setOptions({ title: 'Select Location' }),
+    [navigation],
+  );
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data } = useZonesDataEffect();
