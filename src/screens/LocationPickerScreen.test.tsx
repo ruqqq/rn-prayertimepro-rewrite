@@ -53,12 +53,6 @@ describe('LocationPickerScreen', () => {
     params: {},
   };
 
-  beforeEach(() => {});
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should render list items', async () => {
     mockedUseZonesDataEffect.mockReturnValue({
       data: zones,

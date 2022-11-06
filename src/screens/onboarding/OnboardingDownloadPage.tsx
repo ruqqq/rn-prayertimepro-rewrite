@@ -29,6 +29,7 @@ const OnboardingDownloadPage: React.FC<Props> = ({
     data: zoneData,
     hasData: hasZoneData,
     downloadData: downloadZoneData,
+    downloadDataState: downloadZoneDataState,
   } = useZonesDataEffect();
   const [selectedZone, setSelectedZone] = useState<Zone.T | undefined>(
     undefined,
@@ -65,23 +66,38 @@ const OnboardingDownloadPage: React.FC<Props> = ({
   }, [localityCityPref, localityCodePref, zoneData, selectedZone]);
 
   useCustomEffect(() => {
+    if (
+      selectedZone &&
+      downloadDataState.state === 'downloaded' &&
+      localityCityPref !== selectedZone.city.value
+    ) {
+      setLocalityCityPref(selectedZone.city.value);
+      setLocalityCodePref(selectedZone.localityCode.value);
+    }
+
     if (!completedSteps[0] && downloadDataState.state === 'downloaded') {
       markStepAsCompleted();
     }
-  }, [markStepAsCompleted, downloadDataState.state, completedSteps[0]]);
+  }, [
+    markStepAsCompleted,
+    downloadDataState.state,
+    completedSteps[0],
+    selectedZone,
+    localityCityPref,
+    setLocalityCodePref,
+    setLocalityCityPref,
+  ]);
 
   useEffect(() => {
     const subscription = LocationPickerEventEmitter.addListener(
       'onZoneSelected',
       (item: Zone.T) => {
-        setLocalityCityPref(item.city.value);
-        setLocalityCodePref(item.localityCode.value);
         setSelectedZone(item);
       },
     );
 
     return () => subscription.remove();
-  }, [setSelectedZone, setLocalityCityPref, setLocalityCodePref]);
+  }, [setSelectedZone]);
 
   return (
     <View>
@@ -108,47 +124,6 @@ const OnboardingDownloadPage: React.FC<Props> = ({
             ? 'Select location'
             : 'Loading...'}
         </Button>
-        {/* {hasZoneData ? ( */}
-        {/*   <Picker */}
-        {/*     migrateTextField */}
-        {/*     autoCorrect={false} */}
-        {/*     topBarProps={{ title: 'Select Location' }} */}
-        {/*     placeholder="Select location" */}
-        {/*     showSearch={true} */}
-        {/*     trailingAccessory={ */}
-        {/*       <MaterialCommunityIcons name="chevron-down" size={24} /> */}
-        {/*     } */}
-        {/*     editable={hasZoneData} */}
-        {/*     value={selectedZone ? zoneItemKey(selectedZone) : undefined} */}
-        {/*     onChange={(item: { label: string; value: string }) => { */}
-        {/*       const matchingZone = zoneData.filter( */}
-        {/*         zone => zoneItemKey(zone) === item.value, */}
-        {/*       )[0]; */}
-
-        {/*       setSelectedZone(matchingZone); */}
-        {/*       setLocalityCityPref(matchingZone.city.value); */}
-        {/*       setLocalityCodePref(matchingZone.localityCode.value); */}
-        {/*     }}> */}
-        {/*     {zoneData */}
-        {/*       .sort((a, b) => */}
-        {/*         `${a.city}, ${a.state}`.localeCompare(`${b.city}, ${b.state}`), */}
-        {/*       ) */}
-        {/*       .map(item => ( */}
-        {/*         <Picker.Item */}
-        {/*           key={zoneItemKey(item)} */}
-        {/*           value={zoneItemKey(item)} */}
-        {/*           label={zoneLabel(item)} */}
-        {/*         /> */}
-        {/*       ))} */}
-        {/*   </Picker> */}
-        {/* ) : ( */}
-        {/*   <Picker */}
-        {/*     key="Loading Picker" */}
-        {/*     migrateTextField */}
-        {/*     placeholder="Loading..." */}
-        {/*     editable={false} */}
-        {/*   /> */}
-        {/* )} */}
         <Button
           mode="contained-tonal"
           disabled={
@@ -167,7 +142,8 @@ const OnboardingDownloadPage: React.FC<Props> = ({
             : 'Download'}
         </Button>
 
-        {downloadDataState.state === 'error' ? (
+        {downloadZoneDataState.state === 'error' ||
+        downloadDataState.state === 'error' ? (
           <Text style={{ textAlign: 'center', marginTop: 10, color: 'red' }}>
             <MaterialCommunityIcons name="alert-circle" size={18} /> Unable to
             download data. Please try again later.
@@ -183,10 +159,6 @@ const OnboardingDownloadPage: React.FC<Props> = ({
 };
 
 export default OnboardingDownloadPage;
-
-function zoneItemKey(zone: Zone.T) {
-  return `${zone.country.value}|${zone.state.value}|${zone.city.value}|${zone.code.value}`;
-}
 
 function zoneLabel(zone: Zone.T) {
   return `${zone.city.value}, ${zone.state.value}`;

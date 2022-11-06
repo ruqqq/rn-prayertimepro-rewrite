@@ -1,3 +1,4 @@
+import '@testing-library/jest-native/extend-expect';
 /* eslint-disable no-undef */
 import Db from './src/Db';
 
